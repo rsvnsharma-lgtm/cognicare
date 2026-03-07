@@ -762,20 +762,28 @@ function SimonSays({ config, onComplete }) {
   const [lit,      setLit]      = useState(null);
   const [failed,   setFailed]   = useState(false);
 
+  const timersRef = useRef([]);
+  const clearTimers = () => { timersRef.current.forEach(clearTimeout); timersRef.current=[]; };
+
   const runSeq = (s, sp) => {
+    clearTimers();
     let i=0;
     const next=()=>{
       if(i>=s.length){setShowing(-1);setIP(true);return;}
       setLit(s[i]);
-      setTimeout(()=>{setLit(null);setTimeout(()=>{i++;next();},sp*0.3);},sp*0.7);
+      timersRef.current.push(setTimeout(()=>{
+        setLit(null);
+        timersRef.current.push(setTimeout(()=>{i++;next();},sp*0.3));
+      },sp*0.7));
     };
-    setTimeout(next,600);
+    timersRef.current.push(setTimeout(next,600));
   };
 
   useEffect(()=>{
     const s=makeSeq(currentRound);
     setSeq(s); setIP(false); setUserSeq([]); setFailed(false); setLit(null);
     runSeq(s,currentRound.speed);
+    return ()=>clearTimers();
   },[roundIdx]);
 
   const tap=(colorIdx)=>{
@@ -1254,25 +1262,30 @@ function NBack({ config, onComplete }) {
   const [done2,setDone2]=useState(false);
   const seqRef=useRef([]);
 
-  useEffect(()=>{
-    const s=makeSeq(currentRound.trials);
-    seqRef.current=s;setSeqSet(s);setTrial(0);setHits(0);setMisses(0);setDone2(false);setResponded(false);
-    runTrial(s,0,currentRound.n);
-  },[roundIdx]);
+  const nbackTimersRef = useRef([]);
+  const clearNbackTimers = () => { nbackTimersRef.current.forEach(clearTimeout); nbackTimersRef.current=[]; };
 
   const runTrial=(s,t,n)=>{
     if(t>=s.length){setDone2(true);return;}
     setCurrent(s[t]);setShowing2(true);setResponded(false);
-    setTimeout(()=>{
+    nbackTimersRef.current.push(setTimeout(()=>{
       setShowing2(false);
-      setTimeout(()=>{
+      nbackTimersRef.current.push(setTimeout(()=>{
         const isMatch=t>=n&&s[t]===s[t-n];
         setMisses(m=>m+(isMatch?1:0));
         setTrial(t+1);
         runTrial(s,t+1,n);
-      },400);
-    },1000);
+      },400));
+    },1000));
   };
+
+  useEffect(()=>{
+    clearNbackTimers();
+    const s=makeSeq(currentRound.trials);
+    seqRef.current=s;setSeqSet(s);setTrial(0);setHits(0);setMisses(0);setDone2(false);setResponded(false);
+    runTrial(s,0,currentRound.n);
+    return ()=>clearNbackTimers();
+  },[roundIdx]);
 
   useEffect(()=>{
     if(done2){
@@ -1310,74 +1323,143 @@ function NBack({ config, onComplete }) {
 }
 
 function SentenceBuilder({ config, onComplete }) {
-  const ROUND_SPECS=config.roundSpecs||[
-    {len:3, label:'3-word sentences'},
-    {len:4, label:'4-word sentences'},
-    {len:4, label:'4-word, more variety'},
-    {len:5, label:'5-word sentences'},
-    {len:5, label:'5-word, harder'},
-    {len:6, label:'6-word sentences'},
-    {len:7, label:'7-word sentences'},
-    {len:8, label:'8-word expert sentences'},
+  const SENTENCES = [
+    {words:["The","cat","sat"],            answer:"The cat sat"},
+    {words:["The","sky","is","blue"],      answer:"The sky is blue"},
+    {words:["She","loves","ice","cream"],  answer:"She loves ice cream"},
+    {words:["The","rain","falls","gently","down"],      answer:"The rain falls gently down"},
+    {words:["She","plays","the","piano","well"],         answer:"She plays the piano well"},
+    {words:["He","walks","to","school","every","day"],   answer:"He walks to school every day"},
+    {words:["She","always","greets","people","with","a","smile"], answer:"She always greets people with a smile"},
+    {words:["Reading","books","is","the","key","to","expanding","knowledge"], answer:"Reading books is the key to expanding knowledge"},
   ];
-  const SENTENCES=[
-    {words:["cat","The","sat"],answer:"The cat sat"},
-    {words:["is","sky","blue","The"],answer:"The sky is blue"},
-    {words:["loves","She","ice","cream"],answer:"She loves ice cream"},
-    {words:["is","big","The","dog"],answer:"The dog is big"},
-    {words:["rain","falls","The","gently","down"],answer:"The rain falls gently down"},
-    {words:["quickly","fox","The","jumps","brown"],answer:"The brown fox jumps quickly"},
-    {words:["morning","every","exercises","She","early","in","the"],answer:"She exercises every morning in the early"},
-    {words:["Reading","is","knowledge","to","books","the","key","expanding"],answer:"Reading books is the key to expanding knowledge"},
-  ];
-  const { currentRound, roundIdx, score, phase, completeRound, renderTransition, renderDone } = useProgression(ROUND_SPECS, onComplete);
 
-  const sIdx=Math.min(roundIdx,SENTENCES.length-1);
-  const s=SENTENCES[sIdx];
-  const [placed,setPlaced]=useState([]);
-  const [wordSet]=useState(()=>[...s.words].sort(()=>Math.random()-0.5));
-  const [feedback,setFeedback]=useState(null);
+  const ROUND_SPECS = config.roundSpecs || SENTENCES.map((s,i) => ({
+    label: s.words.length + '-word sentence — round ' + (i+1)
+  }));
 
-  useEffect(()=>{setPlaced([]);setFeedback(null);},[roundIdx]);
+  const { currentRound, roundIdx, score, phase, completeRound, renderTransition, renderDone } =
+    useProgression(ROUND_SPECS, onComplete);
 
-  const addWord=(word,wi)=>{if(feedback)return;setPlaced(p=>[...p,{word,wi}]);};
-  const removeWord=(i)=>{if(feedback)return;setPlaced(p=>p.filter((_,j)=>j!==i));};
-  const usedIdx=placed.map(p=>p.wi);
+  // Derive sentence directly — no useState for sentence or wordSet
+  const sentence = SENTENCES[Math.min(roundIdx, SENTENCES.length - 1)];
 
-  const check=()=>{
-    const attempt=placed.map(p=>p.word).join(' ');
-    const isOk=attempt===s.answer;
-    setFeedback(isOk?'correct':'wrong');
-    setTimeout(()=>completeRound(isOk?1:0,1),1100);
+  const [placed,   setPlaced]   = useState([]);
+  const [wordSet,  setWordSet]  = useState(() => [...sentence.words].sort(() => Math.random() - 0.5));
+  const [feedback, setFeedback] = useState(null);
+  const [prevRound, setPrevRound] = useState(0);
+
+  // Reset when round changes
+  if (roundIdx !== prevRound) {
+    const s = SENTENCES[Math.min(roundIdx, SENTENCES.length - 1)];
+    setPrevRound(roundIdx);
+    setPlaced([]);
+    setFeedback(null);
+    setWordSet([...s.words].sort(() => Math.random() - 0.5));
+  }
+
+  const usedIdx = placed.map(p => p.wi);
+
+  const addWord = (word, wi) => {
+    if (feedback) return;
+    setPlaced(p => [...p, { word, wi }]);
   };
 
-  if(phase==='transition') return renderTransition();
-  if(phase==='done')       return renderDone('📝','Sentence Builder Complete!');
+  const removeWord = (i) => {
+    if (feedback) return;
+    setPlaced(p => p.filter((_, j) => j !== i));
+  };
 
-  return React.createElement('div',null,
-    React.createElement(RoundHeader,{roundIdx,totalRounds:ROUND_SPECS.length,label:currentRound.label,score,color:'#4ECDC4'}),
-    React.createElement('div',{style:{minHeight:48,background:'#1e2235',border:`2px dashed ${feedback==='correct'?'#4ECDC4':feedback==='wrong'?'#FF6B6B':'#2a2f4a'}`,
-      borderRadius:12,padding:'10px',marginBottom:12,display:'flex',flexWrap:'wrap',gap:6,alignItems:'center'}},
-      placed.length===0&&React.createElement('span',{style:{color:'#333',fontSize:13}},'Tap words to build the sentence...'),
-      ...placed.map((p,i)=>React.createElement('span',{key:i,onClick:()=>removeWord(i),
-        style:{padding:'6px 12px',background:'#6C63FF33',border:'1px solid #6C63FF',borderRadius:8,color:'#9b95ff',cursor:'pointer',fontSize:config.large?15:13,fontWeight:600}},p.word))
+  const check = () => {
+    const attempt = placed.map(p => p.word).join(' ');
+    const ok = attempt === sentence.answer;
+    setFeedback(ok ? 'correct' : 'wrong');
+    setTimeout(() => completeRound(ok ? 1 : 0, 1), 1100);
+  };
+
+  if (phase === 'transition') return renderTransition();
+  if (phase === 'done')       return renderDone('📝', 'Sentence Builder Complete!');
+
+  return React.createElement('div', null,
+    React.createElement(RoundHeader, { roundIdx, totalRounds: ROUND_SPECS.length, label: currentRound.label, score, color: '#4ECDC4' }),
+    React.createElement('div', { style: { color: '#888', fontSize: 12, marginBottom: 8, textAlign: 'center' } },
+      'Arrange ' + sentence.words.length + ' words into the correct sentence'
     ),
-    React.createElement('div',{style:{display:'flex',flexWrap:'wrap',gap:8,marginBottom:14}},
-      ...wordSet.map((word,wi)=>!usedIdx.includes(wi)
-        ?React.createElement('button',{key:wi,onClick:()=>addWord(word,wi),
-            style:{padding:'8px 14px',background:'#1e2235',border:'2px solid #2a2f4a',borderRadius:8,color:'#e0e0ff',cursor:'pointer',fontSize:config.large?15:13,fontWeight:600}},word)
-        :React.createElement('button',{key:wi,style:{padding:'8px 14px',background:'transparent',border:'2px dashed #1e2235',borderRadius:8,color:'transparent',fontSize:13},disabled:true},word)
+    // Drop zone
+    React.createElement('div', {
+      style: {
+        minHeight: 52, background: '#1e2235',
+        border: '2px dashed ' + (feedback === 'correct' ? '#4ECDC4' : feedback === 'wrong' ? '#FF6B6B' : '#2a2f4a'),
+        borderRadius: 12, padding: '10px', marginBottom: 14,
+        display: 'flex', flexWrap: 'wrap', gap: 6, alignItems: 'center'
+      }
+    },
+      placed.length === 0
+        ? React.createElement('span', { style: { color: '#333', fontSize: 13 } }, 'Tap words below to build the sentence...')
+        : placed.map((p, i) =>
+            React.createElement('span', {
+              key: i, onClick: () => removeWord(i),
+              style: {
+                padding: '6px 12px', background: '#6C63FF33', border: '1px solid #6C63FF',
+                borderRadius: 8, color: '#9b95ff', cursor: 'pointer',
+                fontSize: config.large ? 15 : 13, fontWeight: 600
+              }
+            }, p.word)
+          )
+    ),
+    // Word bank
+    React.createElement('div', { style: { display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 16 } },
+      wordSet.map((word, wi) =>
+        !usedIdx.includes(wi)
+          ? React.createElement('button', {
+              key: wi, onClick: () => addWord(word, wi),
+              style: {
+                padding: '8px 14px', background: '#1e2235', border: '2px solid #2a2f4a',
+                borderRadius: 8, color: '#e0e0ff', cursor: 'pointer',
+                fontSize: config.large ? 15 : 13, fontWeight: 600
+              }
+            }, word)
+          : React.createElement('button', {
+              key: wi, disabled: true,
+              style: {
+                padding: '8px 14px', background: 'transparent',
+                border: '2px dashed #1e2235', borderRadius: 8,
+                color: 'transparent', fontSize: 13
+              }
+            }, word)
       )
     ),
-    placed.length>0&&!feedback&&React.createElement('div',{style:{display:'flex',gap:8}},
-      React.createElement('button',{onClick:check,style:{flex:1,padding:'11px',background:'linear-gradient(135deg,#6C63FF,#4ECDC4)',border:'none',borderRadius:10,color:'#fff',fontWeight:700,cursor:'pointer'}},'✓ Check'),
-      React.createElement('button',{onClick:()=>setPlaced([]),style:{padding:'11px 14px',background:'#1e2235',border:'1px solid #2a2f4a',borderRadius:10,color:'#666',cursor:'pointer'}},'↺')
+    // Buttons
+    placed.length > 0 && !feedback && React.createElement('div', { style: { display: 'flex', gap: 8 } },
+      React.createElement('button', {
+        onClick: check,
+        style: {
+          flex: 1, padding: '11px',
+          background: 'linear-gradient(135deg,#6C63FF,#4ECDC4)',
+          border: 'none', borderRadius: 10, color: '#fff', fontWeight: 700, cursor: 'pointer'
+        }
+      }, '✓ Check'),
+      React.createElement('button', {
+        onClick: () => setPlaced([]),
+        style: {
+          padding: '11px 14px', background: '#1e2235', border: '1px solid #2a2f4a',
+          borderRadius: 10, color: '#666', cursor: 'pointer'
+        }
+      }, '↺ Clear')
     ),
-    feedback&&React.createElement('div',{style:{marginTop:8,padding:'10px',background:feedback==='correct'?'#4ECDC422':'#FF6B6B22',borderRadius:10,
-      color:feedback==='correct'?'#4ECDC4':'#FF6B6B',fontWeight:600,fontSize:13}},
-      feedback==='correct'?'✓ Perfect!':'✗ '+s.answer)
+    // Feedback
+    feedback && React.createElement('div', {
+      style: {
+        marginTop: 8, padding: '10px',
+        background: feedback === 'correct' ? '#4ECDC422' : '#FF6B6B22',
+        borderRadius: 10,
+        color: feedback === 'correct' ? '#4ECDC4' : '#FF6B6B',
+        fontWeight: 600, fontSize: 13
+      }
+    }, feedback === 'correct' ? '✓ Perfect!' : '✗ Correct order: ' + sentence.answer)
   );
 }
+
 
 function SynonymFinder({ config, onComplete }) {
   const ALL_Q=[
