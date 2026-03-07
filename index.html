@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cognicare by VasudhaivaKutumbakam Software Solutions Pvt. Ltd.</title>
+  <title>Cognicare by Vasudhaiva Kutumbakam Software Solutions Pvt. Ltd.</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <style>
@@ -66,23 +66,23 @@ const GAMES = {
   recall:{
     kids:{
       easy:  { name:"What's Missing?", desc:"Spot the missing item",            component:"WhatsGone",    config:{items:4} },
-      medium:{ name:"Fruit Recall",    desc:"Remember more items",              component:"WhatsGone",    config:{items:6} },
-      hard:  { name:"Grid Memory",     desc:"Remember positions on a grid",     component:"SpatialRecall",config:{grid:3,tiles:3} },
+      medium:{ name:"Grid Memory",     desc:"Remember positions on a grid",     component:"SpatialRecall",config:{grid:3,tiles:3} },
+      hard:  { name:"Spot Difference", desc:"Find what changed between scenes", component:"SpotDifference",config:{difficulty:"easy"} },
     },
     teens:{
       easy:  { name:"Quick Scan",      desc:"Recall a list of items",           component:"WhatsGone",    config:{items:5} },
-      medium:{ name:"Spatial Grid",    desc:"Remember highlighted grid cells",  component:"SpatialRecall",config:{grid:4,tiles:4} },
-      hard:  { name:"Memory Probe",    desc:"Fast recall under pressure",       component:"WhatsGone",    config:{items:10,timed:true} },
+      medium:{ name:"Digit Span",      desc:"Remember increasing digit strings",component:"DigitSpan",    config:{startLen:3,maxLen:7} },
+      hard:  { name:"N-Back",          desc:"Classic 2-back clinical test",     component:"NBack",        config:{n:2,trials:15} },
     },
     adults:{
       easy:  { name:"Item Recall",     desc:"What was in the list?",            component:"WhatsGone",    config:{items:6} },
-      medium:{ name:"Spatial Recall",  desc:"Remember positions in a grid",     component:"SpatialRecall",config:{grid:4,tiles:6} },
-      hard:  { name:"Expert Grid",     desc:"Advanced spatial memory",          component:"SpatialRecall",config:{grid:5,tiles:8} },
+      medium:{ name:"Digit Span",      desc:"Remember digit sequences",         component:"DigitSpan",    config:{startLen:4,maxLen:9} },
+      hard:  { name:"N-Back",          desc:"2-back working memory test",       component:"NBack",        config:{n:2,trials:20} },
     },
     seniors:{
       easy:  { name:"Daily Items",     desc:"Remember everyday items",          component:"WhatsGone",    config:{items:3,large:true} },
-      medium:{ name:"Simple Grid",     desc:"Remember highlighted squares",     component:"SpatialRecall",config:{grid:3,tiles:3} },
-      hard:  { name:"Recall Challenge",desc:"Push your recall ability",         component:"WhatsGone",    config:{items:7} },
+      medium:{ name:"Spot Difference", desc:"Find what changed in the scene",   component:"SpotDifference",config:{difficulty:"easy",large:true} },
+      hard:  { name:"Digit Span",      desc:"Remember digit sequences",         component:"DigitSpan",    config:{startLen:3,maxLen:7,large:true} },
     },
   },
   orientation:{
@@ -109,46 +109,46 @@ const GAMES = {
   },
   language:{
     kids:{
-      easy:  { name:"Word Builder",    desc:"Unscramble simple words",          component:"WordScramble",     config:{difficulty:"easy"} },
-      medium:{ name:"Odd One Out",     desc:"Which word doesn't belong?",       component:"WordAssociation",  config:{difficulty:"easy"} },
-      hard:  { name:"Word Wizard",     desc:"Tricky word challenges",           component:"WordScramble",     config:{difficulty:"hard"} },
+      easy:  { name:"Word Builder",    desc:"Unscramble simple words",          component:"WordScramble",    config:{difficulty:"easy"} },
+      medium:{ name:"Odd One Out",     desc:"Which word doesn't belong?",       component:"WordAssociation", config:{difficulty:"easy"} },
+      hard:  { name:"Sentence Builder",desc:"Arrange words into a sentence",    component:"SentenceBuilder", config:{difficulty:"easy"} },
     },
     teens:{
-      easy:  { name:"Word Unscramble", desc:"Decode scrambled words",           component:"WordScramble",     config:{difficulty:"medium"} },
-      medium:{ name:"Odd One Out",     desc:"Find the word that doesn't fit",   component:"WordAssociation",  config:{difficulty:"medium"} },
-      hard:  { name:"Anagram Pro",     desc:"Advanced anagram solving",         component:"WordScramble",     config:{difficulty:"expert"} },
+      easy:  { name:"Synonym Finder",  desc:"Find the word closest in meaning", component:"SynonymFinder",   config:{difficulty:"easy"} },
+      medium:{ name:"Odd One Out",     desc:"Find the word that doesn't fit",   component:"WordAssociation", config:{difficulty:"medium"} },
+      hard:  { name:"Sentence Builder",desc:"Arrange complex sentences",        component:"SentenceBuilder", config:{difficulty:"medium"} },
     },
     adults:{
-      easy:  { name:"Word Sort",       desc:"Unscramble everyday words",        component:"WordScramble",     config:{difficulty:"medium"} },
-      medium:{ name:"Word Association",desc:"Find the odd word out",            component:"WordAssociation",  config:{difficulty:"hard"} },
-      hard:  { name:"Lexicon Master",  desc:"Advanced vocabulary test",         component:"WordScramble",     config:{difficulty:"expert"} },
+      easy:  { name:"Synonym Finder",  desc:"Match words by meaning",           component:"SynonymFinder",   config:{difficulty:"medium"} },
+      medium:{ name:"Sentence Builder",desc:"Build correct sentences",          component:"SentenceBuilder", config:{difficulty:"medium"} },
+      hard:  { name:"Synonym Expert",  desc:"Advanced vocabulary synonyms",     component:"SynonymFinder",   config:{difficulty:"hard"} },
     },
     seniors:{
-      easy:  { name:"Simple Words",    desc:"Short and familiar words",         component:"WordScramble",     config:{difficulty:"easy",large:true} },
-      medium:{ name:"Odd One Out",     desc:"Which word doesn't belong?",       component:"WordAssociation",  config:{difficulty:"easy",large:true} },
-      hard:  { name:"Word Challenge",  desc:"Push your vocabulary",             component:"WordScramble",     config:{difficulty:"hard"} },
+      easy:  { name:"Simple Words",    desc:"Short and familiar words",         component:"WordScramble",    config:{difficulty:"easy",large:true} },
+      medium:{ name:"Synonym Finder",  desc:"Find words with similar meaning",  component:"SynonymFinder",   config:{difficulty:"easy",large:true} },
+      hard:  { name:"Odd One Out",     desc:"Which word doesn't belong?",       component:"WordAssociation", config:{difficulty:"medium",large:true} },
     },
   },
   logic:{
     kids:{
       easy:  { name:"Quick Maths",     desc:"Simple addition and subtraction",  component:"MentalMath",    config:{ops:['+'],maxNum:5,rounds:5} },
       medium:{ name:"Pattern Finder",  desc:"What comes next?",                 component:"NumberPattern", config:{difficulty:"medium"} },
-      hard:  { name:"Logic Puzzler",   desc:"Complete the tricky sequence",     component:"NumberPattern", config:{difficulty:"hard"} },
+      hard:  { name:"Mini Sudoku",     desc:"Fill the 4×4 Sudoku grid",         component:"SudokuMini",    config:{size:"4x4"} },
     },
     teens:{
       easy:  { name:"Mental Maths",    desc:"Quick arithmetic challenge",       component:"MentalMath",    config:{ops:['+','-'],maxNum:20,rounds:6} },
-      medium:{ name:"Math Logic",      desc:"Number reasoning challenges",      component:"NumberPattern", config:{difficulty:"hard"} },
+      medium:{ name:"Mini Sudoku",     desc:"Solve the 4×4 Sudoku",             component:"SudokuMini",    config:{size:"4x4"} },
       hard:  { name:"Speed Maths",     desc:"Multiply and divide fast",         component:"MentalMath",    config:{ops:['+','-','×'],maxNum:12,rounds:8} },
     },
     adults:{
-      easy:  { name:"Pattern Logic",   desc:"Complete the pattern",             component:"NumberPattern", config:{difficulty:"medium"} },
+      easy:  { name:"Pattern Logic",   desc:"Complete the number pattern",      component:"NumberPattern", config:{difficulty:"medium"} },
       medium:{ name:"Mental Maths",    desc:"Mixed operations challenge",       component:"MentalMath",    config:{ops:['+','-','×'],maxNum:15,rounds:7} },
-      hard:  { name:"Logic Master",    desc:"Advanced pattern problems",        component:"NumberPattern", config:{difficulty:"expert"} },
+      hard:  { name:"Mini Sudoku",     desc:"Solve the 4×4 Sudoku grid",        component:"SudokuMini",    config:{size:"4x4"} },
     },
     seniors:{
       easy:  { name:"Simple Maths",    desc:"Easy addition sums",               component:"MentalMath",    config:{ops:['+'],maxNum:10,rounds:5,large:true} },
       medium:{ name:"Number Logic",    desc:"Find the next number",             component:"NumberPattern", config:{difficulty:"medium"} },
-      hard:  { name:"Logic Challenge", desc:"Sharpen your reasoning",           component:"NumberPattern", config:{difficulty:"hard"} },
+      hard:  { name:"Mini Sudoku",     desc:"Fill the 4×4 Sudoku grid",         component:"SudokuMini",    config:{size:"4x4",large:true} },
     },
   },
 };
@@ -1096,8 +1096,553 @@ function WordAssociation({ config, onComplete }) {
   );
 }
 
+
+// ══════════════════════════════════════════════════════════════
+// NEW GAMES BATCH 2
+// ══════════════════════════════════════════════════════════════
+
+// ── STORY RECALL (Memory) ─────────────────────────────────────
+const STORIES = {
+  easy:[
+    {story:"Tom has a red dog named Max. Max loves to eat bones and play in the garden. One sunny Tuesday, Tom took Max to the park. They played fetch with a yellow ball for one hour.",
+     qs:[
+       {q:"What is the dog's name?",a:"Max",opts:["Rex","Max","Buddy","Jack"]},
+       {q:"What colour is the ball?",a:"Yellow",opts:["Red","Blue","Yellow","Green"]},
+       {q:"What day did they go to the park?",a:"Tuesday",opts:["Monday","Tuesday","Wednesday","Saturday"]},
+       {q:"How long did they play?",a:"One hour",opts:["30 minutes","One hour","Two hours","All day"]},
+     ]},
+    {story:"Maria is a baker. Every morning at 6am she bakes 12 loaves of bread and 24 muffins. Her shop is on Oak Street. On Fridays she also bakes chocolate cake.",
+     qs:[
+       {q:"What does Maria do?",a:"Baker",opts:["Doctor","Baker","Teacher","Driver"]},
+       {q:"How many muffins does she bake each morning?",a:"24",opts:["12","18","24","36"]},
+       {q:"What street is her shop on?",a:"Oak Street",opts:["Elm Street","Oak Street","Main Street","Park Avenue"]},
+       {q:"What does she bake on Fridays?",a:"Chocolate cake",opts:["Cookies","Chocolate cake","Pie","Brownies"]},
+     ]},
+  ],
+  medium:[
+    {story:"Dr. Priya Sharma works at City Hospital on the 4th floor. She starts her shift at 7:30am every weekday. Last Monday she treated 8 patients with flu, 3 with broken bones, and 1 emergency case. She drives a blue Honda to work.",
+     qs:[
+       {q:"Which floor does Dr. Sharma work on?",a:"4th floor",opts:["2nd floor","3rd floor","4th floor","5th floor"]},
+       {q:"What time does her shift start?",a:"7:30am",opts:["6:00am","7:00am","7:30am","8:00am"]},
+       {q:"How many flu patients did she treat on Monday?",a:"8",opts:["3","5","8","11"]},
+       {q:"What car does she drive?",a:"Blue Honda",opts:["Red Toyota","Blue Honda","White BMW","Silver Ford"]},
+     ]},
+  ],
+  hard:[
+    {story:"The ancient city of Petra was carved into rose-red cliffs by the Nabataean people around 300 BC in what is now southern Jordan. At its peak it housed 30,000 people and controlled trade routes between Arabia, Egypt and the Mediterranean. The city was largely forgotten by the Western world until Swiss explorer Johann Ludwig Burckhardt rediscovered it in 1812.",
+     qs:[
+       {q:"What colour are the cliffs of Petra?",a:"Rose-red",opts:["White","Golden","Rose-red","Grey"]},
+       {q:"Who built Petra?",a:"Nabataean people",opts:["Romans","Egyptians","Nabataean people","Persians"]},
+       {q:"Approximately when was Petra built?",a:"300 BC",opts:["100 AD","300 BC","500 BC","1000 AD"]},
+       {q:"Who rediscovered Petra in the West?",a:"Johann Ludwig Burckhardt",opts:["Marco Polo","Napoleon Bonaparte","Johann Ludwig Burckhardt","Charles Darwin"]},
+     ]},
+  ],
+};
+
+function StoryRecall({ config, onComplete }) {
+  const bank = STORIES[config.difficulty]||STORIES.easy;
+  const [story] = useState(()=>bank[Math.floor(Math.random()*bank.length)]);
+  const [phase, setPhase] = useState('read'); // read|quiz|done
+  const [idx, setIdx] = useState(0);
+  const [picked, setPicked] = useState(null);
+  const [score, setScore] = useState(0);
+  const [opts] = useState(()=>story.qs.map(q=>[...new Set([q.a,...q.opts])].sort(()=>Math.random()-0.5).slice(0,4)));
+  const q = story.qs[idx];
+
+  const choose = (opt) => {
+    if(picked) return; setPicked(opt);
+    const correct = opt===q.a;
+    if(correct) setScore(s=>s+1);
+    setTimeout(()=>{
+      if(idx+1>=story.qs.length){setPhase('done');onComplete&&onComplete({score:score+(correct?1:0),total:story.qs.length});}
+      else{setIdx(i=>i+1);setPicked(null);}
+    },1000);
+  };
+
+  if(phase==='read') return React.createElement('div',null,
+    React.createElement('div',{style:{color:'#FFB347',fontWeight:600,fontSize:13,marginBottom:10}},'📖 Read this story carefully:'),
+    React.createElement('div',{style:{fontSize:config.large?15:13,color:'#e0e0ff',background:'#1e2235',border:'1px solid #2a2f4a',borderRadius:14,padding:'18px',lineHeight:1.8,marginBottom:20}},story.story),
+    React.createElement('button',{onClick:()=>setPhase('quiz'),style:{width:'100%',padding:'13px',background:'linear-gradient(135deg,#6C63FF,#4ECDC4)',border:'none',borderRadius:12,color:'#fff',fontWeight:700,cursor:'pointer',fontSize:15}},'I\'ve read it — Start Quiz →')
+  );
+
+  if(phase==='done') return React.createElement('div',{style:{padding:24,background:'linear-gradient(135deg,#6C63FF22,#4ECDC422)',borderRadius:16,textAlign:'center'}},
+    React.createElement('div',{style:{fontSize:48}},'📚'),
+    React.createElement('div',{style:{fontSize:22,fontWeight:700,color:'#fff',marginTop:8}},'Story Complete!'),
+    React.createElement('div',{style:{color:'#aaa',marginTop:8}},`${score}/${story.qs.length} questions correct`)
+  );
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement('div',{style:{color:'#aaa',fontSize:13,marginBottom:16}},`Question ${idx+1} of ${story.qs.length} · Score: ${score}`),
+    React.createElement('div',{style:{fontSize:config.large?16:15,fontWeight:600,color:'#fff',marginBottom:20,lineHeight:1.5,padding:'0 8px'}},q.q),
+    React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,maxWidth:360,margin:'0 auto'}},
+      ...opts[idx].map((opt,i)=>{
+        let bg='#1e2235',border='#2a2f4a',color='#e0e0ff';
+        if(picked){if(opt===q.a){bg='#4ECDC422';border='#4ECDC4';}else if(opt===picked){bg='#FF6B6B22';border='#FF6B6B';}}
+        return React.createElement('button',{key:i,onClick:()=>choose(opt),style:{padding:'13px 8px',background:bg,border:`2px solid ${border}`,borderRadius:12,color,fontSize:config.large?15:13,cursor:picked?'default':'pointer',fontWeight:600,transition:'all 0.2s'}},opt);
+      })
+    )
+  );
+}
+
+// ── DIGIT SPAN (Recall) ────────────────────────────────────────
+function DigitSpan({ config, onComplete }) {
+  const startLen = config.startLen||3;
+  const maxLen   = config.maxLen||8;
+  const [len,    setLen]    = useState(startLen);
+  const [digits, setDigits] = useState(()=>Array.from({length:startLen},()=>Math.floor(Math.random()*10)));
+  const [phase,  setPhase]  = useState('show'); // show|input|result
+  const [input,  setInput]  = useState('');
+  const [lives,  setLives]  = useState(3);
+  const [score,  setScore]  = useState(0);
+  const [done,   setDone]   = useState(false);
+  const [showIdx,setShowIdx]= useState(0);
+
+  useEffect(()=>{
+    if(phase!=='show') return;
+    setShowIdx(0);
+    const interval = setInterval(()=>{
+      setShowIdx(i=>{
+        if(i>=digits.length-1){clearInterval(interval);setTimeout(()=>setPhase('input'),600);return i;}
+        return i+1;
+      });
+    },800);
+    return ()=>clearInterval(interval);
+  },[phase,digits]);
+
+  const submit = () => {
+    const correct = input.trim()===digits.join('');
+    if(correct){
+      setScore(s=>s+1);
+      if(len>=maxLen){setDone(true);onComplete&&onComplete({score:score+1,total:maxLen-startLen+1});return;}
+      const newLen = len+1;
+      setLen(newLen);
+      setDigits(Array.from({length:newLen},()=>Math.floor(Math.random()*10)));
+      setInput(''); setPhase('show');
+    } else {
+      const newLives = lives-1;
+      setLives(newLives);
+      if(newLives<=0){setDone(true);onComplete&&onComplete({score,total:maxLen-startLen+1});return;}
+      setDigits(Array.from({length:len},()=>Math.floor(Math.random()*10)));
+      setInput(''); setPhase('show');
+    }
+  };
+
+  if(done) return React.createElement('div',{style:{padding:24,background:'linear-gradient(135deg,#FF6B6B22,#6C63FF22)',borderRadius:16,textAlign:'center'}},
+    React.createElement('div',{style:{fontSize:48}},'🔢'),
+    React.createElement('div',{style:{fontSize:22,fontWeight:700,color:'#fff',marginTop:8}},score>3?'Excellent Memory!':'Good Try!'),
+    React.createElement('div',{style:{color:'#aaa',marginTop:8}},`Reached ${len} digits · Score: ${score}`)
+  );
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement('div',{style:{display:'flex',justifyContent:'center',gap:16,marginBottom:16}},
+      React.createElement('span',{style:{color:'#aaa',fontSize:13}},`Length: ${len}`),
+      React.createElement('span',{style:{color:'#FF6B6B',fontSize:13}},`${'❤️'.repeat(lives)}`),
+      React.createElement('span',{style:{color:'#4ECDC4',fontSize:13}},`Score: ${score}`)
+    ),
+    phase==='show'&&React.createElement('div',null,
+      React.createElement('div',{style:{color:'#FFB347',fontWeight:600,fontSize:14,marginBottom:16}},'Remember this sequence!'),
+      React.createElement('div',{style:{display:'flex',gap:10,justifyContent:'center',flexWrap:'wrap'}},
+        ...digits.map((d,i)=>React.createElement('div',{key:i,style:{
+          width:52,height:52,borderRadius:12,display:'flex',alignItems:'center',justifyContent:'center',
+          fontSize:config.large?26:22,fontWeight:800,
+          background:i===showIdx?'#6C63FF':'#1e2235',
+          border:i===showIdx?'2px solid #9b95ff':'2px solid #2a2f4a',
+          color:i===showIdx?'#fff':'#333',
+          transition:'all 0.3s'
+        }},i<=showIdx?d:''))
+      )
+    ),
+    phase==='input'&&React.createElement('div',null,
+      React.createElement('div',{style:{color:'#4ECDC4',fontWeight:600,fontSize:14,marginBottom:16}},'Type the digits you saw:'),
+      React.createElement('div',{style:{display:'flex',gap:8,justifyContent:'center',maxWidth:260,margin:'0 auto 12px'}},
+        React.createElement('input',{value:input,onChange:e=>setInput(e.target.value.replace(/\D/g,'')),onKeyDown:e=>e.key==='Enter'&&submit(),
+          placeholder:'Enter digits...',maxLength:maxLen,autoFocus:true,
+          style:{flex:1,padding:'12px 14px',background:'#1e2235',border:'2px solid #2a2f4a',borderRadius:10,color:'#fff',fontSize:config.large?22:18,outline:'none',textAlign:'center',letterSpacing:4,fontFamily:'monospace'}}),
+        React.createElement('button',{onClick:submit,style:{padding:'12px 16px',background:'#4ECDC4',border:'none',borderRadius:10,color:'#0a0e1a',cursor:'pointer',fontWeight:700}},'✓')
+      )
+    )
+  );
+}
+
+// ── SENTENCE BUILDER (Language) ───────────────────────────────
+const SENTENCES = {
+  easy:[
+    {words:["cat","The","sat","mat","on","the"],answer:"The cat sat on the mat"},
+    {words:["is","sky","blue","The"],answer:"The sky is blue"},
+    {words:["loves","She","ice","cream"],answer:"She loves ice cream"},
+    {words:["is","big","The","dog"],answer:"The dog is big"},
+    {words:["rain","falls","The","down"],answer:"The rain falls down"},
+  ],
+  medium:[
+    {words:["quickly","fox","The","brown","jumps","lazy","the","over","dog"],answer:"The quick brown fox jumps over the lazy dog"},
+    {words:["morning","every","exercises","She","in","the"],answer:"She exercises every morning in the"},
+    {words:["city","in","tallest","is","the","This","building","the"],answer:"This is the tallest building in the city"},
+    {words:["music","to","loves","He","while","cooking","listening"],answer:"He loves listening to music while cooking"},
+  ],
+  hard:[
+    {words:["knowledge","Reading","the","to","books","is","key","expanding","your"],answer:"Reading books is the key to expanding your knowledge"},
+    {words:["practice","skills","Consistent","mastery","leads","to","of","any"],answer:"Consistent practice leads to mastery of any skills"},
+    {words:["curiosity","minds","drives","great","Intellectual","discovery","scientific"],answer:"Intellectual curiosity drives great scientific discovery"},
+  ],
+};
+
+function SentenceBuilder({ config, onComplete }) {
+  const bank = SENTENCES[config.difficulty]||SENTENCES.easy;
+  const [sentences] = useState(()=>[...bank].sort(()=>Math.random()-0.5).slice(0,4));
+  const [idx, setIdx] = useState(0);
+  const [placed, setPlaced] = useState([]);
+  const [remaining, setRemaining] = useState(()=>[...bank[0].words].sort(()=>Math.random()-0.5));
+  const [feedback, setFeedback] = useState(null);
+  const [score, setScore] = useState(0);
+  const [done, setDone] = useState(false);
+  const s = sentences[idx];
+  const [wordSets] = useState(()=>sentences.map(s=>[...s.words].sort(()=>Math.random()-0.5)));
+
+  useEffect(()=>{
+    setPlaced([]); setFeedback(null);
+  },[idx]);
+
+  const addWord = (word, wi) => {
+    if(feedback) return;
+    setPlaced(p=>[...p,{word,wi}]);
+  };
+  const removeWord = (wi) => {
+    if(feedback) return;
+    setPlaced(p=>p.filter((_,i)=>i!==wi));
+  };
+
+  const check = () => {
+    const attempt = placed.map(p=>p.word).join(' ');
+    const correct = attempt===s.answer;
+    setFeedback(correct?'correct':'wrong');
+    if(correct) setScore(sc=>sc+1);
+    setTimeout(()=>{
+      if(idx+1>=sentences.length){setDone(true);onComplete&&onComplete({score:score+(correct?1:0),total:sentences.length});}
+      else{setIdx(i=>i+1);setFeedback(null);}
+    },1200);
+  };
+
+  const usedIndices = placed.map(p=>p.wi);
+
+  if(done) return React.createElement('div',{style:{padding:24,background:'linear-gradient(135deg,#4ECDC422,#6C63FF22)',borderRadius:16,textAlign:'center'}},
+    React.createElement('div',{style:{fontSize:48}},'📝'),
+    React.createElement('div',{style:{fontSize:22,fontWeight:700,color:'#fff',marginTop:8}},'Well done!'),
+    React.createElement('div',{style:{color:'#aaa',marginTop:8}},`${score}/${sentences.length} correct`)
+  );
+
+  return React.createElement('div',null,
+    React.createElement('div',{style:{color:'#aaa',fontSize:13,marginBottom:12,textAlign:'center'}},`Sentence ${idx+1} of ${sentences.length} · Score: ${score}`),
+    React.createElement('div',{style:{color:'#4ECDC4',fontWeight:600,fontSize:13,marginBottom:8}},'Arrange the words into a correct sentence:'),
+    // Drop zone
+    React.createElement('div',{style:{minHeight:52,background:'#1e2235',border:`2px dashed ${feedback==='correct'?'#4ECDC4':feedback==='wrong'?'#FF6B6B':'#2a2f4a'}`,borderRadius:12,padding:'10px',marginBottom:12,display:'flex',flexWrap:'wrap',gap:6,alignItems:'center'}},
+      placed.length===0&&React.createElement('span',{style:{color:'#333',fontSize:13}},'Tap words below to build your sentence...'),
+      ...placed.map((p,i)=>React.createElement('span',{key:i,onClick:()=>removeWord(i),
+        style:{padding:'6px 12px',background:'#6C63FF33',border:'1px solid #6C63FF',borderRadius:8,color:'#9b95ff',cursor:'pointer',fontSize:config.large?15:13,fontWeight:600}},p.word))
+    ),
+    // Word bank
+    React.createElement('div',{style:{display:'flex',flexWrap:'wrap',gap:8,marginBottom:16}},
+      ...wordSets[idx].map((word,wi)=>!usedIndices.includes(wi)?
+        React.createElement('button',{key:wi,onClick:()=>addWord(word,wi),
+          style:{padding:'8px 14px',background:'#1e2235',border:'2px solid #2a2f4a',borderRadius:8,color:'#e0e0ff',cursor:'pointer',fontSize:config.large?15:13,fontWeight:600,transition:'all 0.15s'}},word)
+        :React.createElement('button',{key:wi,style:{padding:'8px 14px',background:'transparent',border:'2px dashed #1e2235',borderRadius:8,color:'transparent',fontSize:config.large?15:13},disabled:true},word)
+      )
+    ),
+    React.createElement('div',{style:{display:'flex',gap:8}},
+      placed.length>0&&!feedback&&React.createElement('button',{onClick:check,style:{flex:1,padding:'11px',background:'linear-gradient(135deg,#6C63FF,#4ECDC4)',border:'none',borderRadius:10,color:'#fff',fontWeight:700,cursor:'pointer'}},'✓ Check Sentence'),
+      placed.length>0&&!feedback&&React.createElement('button',{onClick:()=>setPlaced([]),style:{padding:'11px 16px',background:'#1e2235',border:'1px solid #2a2f4a',borderRadius:10,color:'#666',cursor:'pointer'}},'↺ Reset')
+    ),
+    feedback&&React.createElement('div',{style:{marginTop:8,padding:'10px',background:feedback==='correct'?'#4ECDC422':'#FF6B6B22',borderRadius:10,color:feedback==='correct'?'#4ECDC4':'#FF6B6B',fontWeight:600,fontSize:13}},
+      feedback==='correct'?'✓ Perfect!':'✗ Not quite — '+s.answer)
+  );
+}
+
+// ── SUDOKU MINI (Logic) ────────────────────────────────────────
+const SUDOKU_PUZZLES = {
+  easy:[ // 4x4, 0 = empty
+    {grid:[[1,0,3,0],[0,3,0,1],[3,0,1,0],[0,1,0,3]],solution:[[1,2,3,4],[4,3,2,1],[3,4,1,2],[2,1,4,3]]},
+    {grid:[[0,2,0,4],[4,0,2,0],[0,4,0,2],[2,0,4,0]],solution:[[1,2,3,4],[4,3,2,1],[3,4,1,2],[2,1,4,3]]},
+    {grid:[[2,0,4,0],[0,4,0,2],[4,0,2,0],[0,2,0,4]],solution:[[2,1,4,3],[3,4,1,2],[4,3,2,1],[1,2,3,4]]},
+  ],
+  medium:[
+    {grid:[[5,3,0,0,7,0,0,0,0],[6,0,0,1,9,5,0,0,0],[0,9,8,0,0,0,0,6,0],[8,0,0,0,6,0,0,0,3],[4,0,0,8,0,3,0,0,1],[7,0,0,0,2,0,0,0,6],[0,6,0,0,0,0,2,8,0],[0,0,0,4,1,9,0,0,5],[0,0,0,0,8,0,0,7,9]],
+     solution:[[5,3,4,6,7,8,9,1,2],[6,7,2,1,9,5,3,4,8],[1,9,8,3,4,2,5,6,7],[8,5,9,7,6,1,4,2,3],[4,2,6,8,5,3,7,9,1],[7,1,3,9,2,4,8,5,6],[9,6,1,5,3,7,2,8,4],[2,8,7,4,1,9,6,3,5],[3,4,5,2,8,6,1,7,9]]},
+  ],
+  hard:[
+    {grid:[[0,0,0,2,6,0,7,0,1],[6,8,0,0,7,0,0,9,0],[1,9,0,0,0,4,5,0,0],[8,2,0,1,0,0,0,4,0],[0,0,4,6,0,2,9,0,0],[0,5,0,0,0,3,0,2,8],[0,0,9,3,0,0,0,7,4],[0,4,0,0,5,0,0,3,6],[7,0,3,0,1,8,0,0,0]],
+     solution:[[4,3,5,2,6,9,7,8,1],[6,8,2,5,7,1,4,9,3],[1,9,7,8,3,4,5,6,2],[8,2,6,1,9,5,3,4,7],[3,7,4,6,8,2,9,1,5],[9,5,1,7,4,3,6,2,8],[5,1,9,3,2,6,8,7,4],[2,4,8,9,5,7,1,3,6],[7,6,3,4,1,8,2,5,9]]},
+  ],
+};
+
+function SudokuMini({ config, onComplete }) {
+  const bank = SUDOKU_PUZZLES[config.size==='4x4'?'easy':'easy'];
+  const [puzzle] = useState(()=>bank[Math.floor(Math.random()*bank.length)]);
+  const size = 4;
+  const [userGrid, setUserGrid] = useState(()=>puzzle.grid.map(r=>[...r]));
+  const [selected, setSelected] = useState(null);
+  const [errors, setErrors] = useState([]);
+  const [solved, setSolved] = useState(false);
+
+  const set = (r,c,v) => {
+    if(puzzle.grid[r][c]!==0) return;
+    const g = userGrid.map(row=>[...row]);
+    g[r][c] = g[r][c]===v?0:v;
+    setUserGrid(g);
+    // check errors
+    const errs = [];
+    g.forEach((row,ri)=>row.forEach((cell,ci)=>{
+      if(cell!==0&&cell!==puzzle.solution[ri][ci]) errs.push(`${ri},${ci}`);
+    }));
+    setErrors(errs);
+    // check solved
+    const complete = g.every((row,ri)=>row.every((cell,ci)=>cell===puzzle.solution[ri][ci]));
+    if(complete){setSolved(true);onComplete&&onComplete({score:1,total:1});}
+  };
+
+  const nums = Array.from({length:size},(_,i)=>i+1);
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    solved
+      ? React.createElement('div',{style:{padding:24,background:'linear-gradient(135deg,#4ECDC422,#A8E6CF22)',borderRadius:16}},
+          React.createElement('div',{style:{fontSize:48}},'🎯'),
+          React.createElement('div',{style:{fontSize:22,fontWeight:700,color:'#fff',marginTop:8}},'Solved!'),
+          React.createElement('div',{style:{color:'#aaa',marginTop:8}},'Sudoku complete!')
+        )
+      : React.createElement('div',null,
+          React.createElement('div',{style:{color:'#aaa',fontSize:13,marginBottom:16}},'Fill the grid — each row, column and 2×2 box needs 1-4 once'),
+          React.createElement('div',{style:{display:'inline-grid',gridTemplateColumns:`repeat(${size},1fr)`,gap:3,background:'#6C63FF',padding:3,borderRadius:12,marginBottom:16}},
+            ...userGrid.map((row,ri)=>row.map((cell,ci)=>{
+              const isFixed = puzzle.grid[ri][ci]!==0;
+              const isErr   = errors.includes(`${ri},${ci}`);
+              const isSel   = selected===`${ri},${ci}`;
+              return React.createElement('div',{key:`${ri}-${ci}`,onClick:()=>!isFixed&&setSelected(isSel?null:`${ri},${ci}`),
+                style:{width:56,height:56,display:'flex',alignItems:'center',justifyContent:'center',
+                  background:isFixed?'#151928':isSel?'#6C63FF33':isErr?'#FF6B6B22':'#1e2235',
+                  borderRadius:6,fontSize:config.large?22:20,fontWeight:700,cursor:isFixed?'default':'pointer',
+                  color:isFixed?'#9b95ff':isErr?'#FF6B6B':'#4ECDC4',transition:'all 0.15s',
+                  border:isSel?'2px solid #6C63FF':'2px solid transparent'}},
+                cell||'');
+            }))
+          ),
+          selected&&React.createElement('div',{style:{display:'flex',gap:8,justifyContent:'center',marginBottom:8}},
+            ...nums.map(n=>React.createElement('button',{key:n,onClick:()=>{const[r,c]=selected.split(',').map(Number);set(r,c,n);},
+              style:{width:44,height:44,borderRadius:10,border:'2px solid #6C63FF44',background:'#1e2235',color:'#6C63FF',fontSize:18,fontWeight:700,cursor:'pointer'}},n)),
+            React.createElement('button',{onClick:()=>{const[r,c]=selected.split(',').map(Number);set(r,c,0);},
+              style:{width:44,height:44,borderRadius:10,border:'2px solid #FF6B6B44',background:'#1e2235',color:'#FF6B6B',fontSize:16,fontWeight:700,cursor:'pointer'}},'✕')
+          ),
+          errors.length>0&&React.createElement('div',{style:{color:'#FF6B6B',fontSize:12}},'⚠️ Some cells are incorrect')
+        )
+  );
+}
+
+// ── N-BACK (Recall) ────────────────────────────────────────────
+function NBack({ config, onComplete }) {
+  const n = config.n||2;
+  const totalTrials = config.trials||15;
+  const [sequence] = useState(()=>{
+    const letters = 'ABCDEFGHIJKLMNOP'.split('');
+    return Array.from({length:totalTrials},()=>letters[Math.floor(Math.random()*6)]);
+  });
+  const [trial, setTrial] = useState(0);
+  const [showing, setShowing] = useState(false);
+  const [current, setCurrent] = useState(null);
+  const [responses, setResponses] = useState([]);
+  const [phase, setPhase] = useState('ready');
+  const [hits, setHits] = useState(0);
+  const [misses, setMisses] = useState(0);
+  const [fas, setFas] = useState(0); // false alarms
+
+  const runTrial = (t) => {
+    if(t>=sequence.length){setPhase('done');onComplete&&onComplete({score:hits,total:totalTrials});return;}
+    setCurrent(sequence[t]); setShowing(true); setPhase('respond');
+    setTimeout(()=>{ setShowing(false); setTimeout(()=>{ handleNoResponse(t); }, 500); }, 1200);
+  };
+
+  const handleNoResponse = (t) => {
+    const isMatch = t>=n && sequence[t]===sequence[t-n];
+    if(isMatch) setMisses(m=>m+1);
+    setTrial(t2=>{ const next=t2+1; setTimeout(()=>runTrial(next),300); return next; });
+  };
+
+  const respond = () => {
+    if(phase!=='respond') return;
+    const t = trial;
+    const isMatch = t>=n && sequence[t]===sequence[t-n];
+    if(isMatch){setHits(h=>h+1);}else{setFas(f=>f+1);}
+    setPhase('wait');
+    setTrial(t2=>{ const next=t2+1; setTimeout(()=>runTrial(next),500); return next; });
+  };
+
+  useEffect(()=>{ if(phase==='ready') setTimeout(()=>runTrial(0),500); },[]);
+
+  if(phase==='done') return React.createElement('div',{style:{padding:24,background:'linear-gradient(135deg,#6C63FF22,#FF6B6B22)',borderRadius:16,textAlign:'center'}},
+    React.createElement('div',{style:{fontSize:48}},'🎯'),
+    React.createElement('div',{style:{fontSize:22,fontWeight:700,color:'#fff',marginTop:8}},`${n}-Back Complete!`),
+    React.createElement('div',{style:{color:'#4ECDC4',marginTop:8}},`✓ Hits: ${hits}`),
+    React.createElement('div',{style:{color:'#FF6B6B',marginTop:4}},`✗ Misses: ${misses} · False alarms: ${fas}`)
+  );
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement('div',{style:{color:'#aaa',fontSize:13,marginBottom:8}},`${n}-Back · Trial ${trial+1}/${totalTrials}`),
+    React.createElement('div',{style:{color:'#555',fontSize:12,marginBottom:20}},`Press MATCH if this letter appeared ${n} step${n>1?'s':''} ago`),
+    React.createElement('div',{style:{width:120,height:120,borderRadius:20,background:showing?'#6C63FF22':'#151928',border:`3px solid ${showing?'#6C63FF':'#2a2f4a'}`,display:'flex',alignItems:'center',justifyContent:'center',margin:'0 auto 24px',transition:'all 0.2s'}},
+      React.createElement('span',{style:{fontSize:config.large?56:48,fontWeight:800,color:showing?'#9b95ff':'#333',fontFamily:'monospace'}},showing?current:'')
+    ),
+    React.createElement('div',{style:{display:'flex',gap:12,justifyContent:'center'}},
+      React.createElement('button',{onClick:respond,disabled:phase!=='respond',
+        style:{padding:'14px 32px',background:phase==='respond'?'linear-gradient(135deg,#6C63FF,#4ECDC4)':'#1e2235',border:`2px solid ${phase==='respond'?'#6C63FF':'#2a2f4a'}`,borderRadius:14,color:phase==='respond'?'#fff':'#333',fontWeight:700,cursor:phase==='respond'?'pointer':'default',fontSize:16,transition:'all 0.2s'}},
+        '✓ Match')
+    ),
+    React.createElement('div',{style:{display:'flex',gap:16,justifyContent:'center',marginTop:16}},
+      React.createElement('span',{style:{color:'#4ECDC4',fontSize:13}},`Hits: ${hits}`),
+      React.createElement('span',{style:{color:'#FF6B6B',fontSize:13}},`Misses: ${misses}`)
+    )
+  );
+}
+
+// ── SYNONYM FINDER (Language) ─────────────────────────────────
+const SYNONYMS = {
+  easy:[
+    {word:"Happy",answer:"Joyful",opts:["Sad","Joyful","Angry","Tired"]},
+    {word:"Big",answer:"Large",opts:["Small","Large","Thin","Short"]},
+    {word:"Fast",answer:"Quick",opts:["Slow","Loud","Quick","Heavy"]},
+    {word:"Begin",answer:"Start",opts:["End","Stop","Start","Finish"]},
+    {word:"Tired",answer:"Weary",opts:["Energetic","Weary","Happy","Strong"]},
+    {word:"Cold",answer:"Chilly",opts:["Hot","Warm","Chilly","Bright"]},
+  ],
+  medium:[
+    {word:"Brave",answer:"Courageous",opts:["Timid","Courageous","Reckless","Weak"]},
+    {word:"Smart",answer:"Intelligent",opts:["Foolish","Lazy","Intelligent","Careless"]},
+    {word:"Strange",answer:"Peculiar",opts:["Normal","Common","Peculiar","Familiar"]},
+    {word:"Angry",answer:"Furious",opts:["Calm","Furious","Content","Pleased"]},
+    {word:"Help",answer:"Assist",opts:["Hinder","Ignore","Assist","Block"]},
+    {word:"Show",answer:"Demonstrate",opts:["Hide","Conceal","Demonstrate","Deny"]},
+  ],
+  hard:[
+    {word:"Mysterious",answer:"Enigmatic",opts:["Obvious","Enigmatic","Clear","Simple"]},
+    {word:"Talkative",answer:"Loquacious",opts:["Silent","Reserved","Loquacious","Quiet"]},
+    {word:"Fearless",answer:"Intrepid",opts:["Timorous","Intrepid","Cautious","Nervous"]},
+    {word:"Harmful",answer:"Deleterious",opts:["Beneficial","Harmless","Deleterious","Safe"]},
+    {word:"Temporary",answer:"Ephemeral",opts:["Permanent","Eternal","Ephemeral","Lasting"]},
+    {word:"Greedy",answer:"Avaricious",opts:["Generous","Charitable","Avaricious","Giving"]},
+  ],
+};
+
+function SynonymFinder({ config, onComplete }) {
+  const bank = SYNONYMS[config.difficulty]||SYNONYMS.easy;
+  const [questions] = useState(()=>[...bank].sort(()=>Math.random()-0.5).slice(0,5));
+  const [idx, setIdx] = useState(0);
+  const [picked, setPicked] = useState(null);
+  const [score, setScore] = useState(0);
+  const [done, setDone] = useState(false);
+  const [opts] = useState(()=>questions.map(q=>[...new Set([q.answer,...q.opts])].sort(()=>Math.random()-0.5).slice(0,4)));
+  const q = questions[idx];
+
+  const choose = (opt) => {
+    if(picked) return; setPicked(opt);
+    const correct = opt===q.answer;
+    if(correct) setScore(s=>s+1);
+    setTimeout(()=>{
+      if(idx+1>=questions.length){setDone(true);onComplete&&onComplete({score:score+(correct?1:0),total:questions.length});}
+      else{setIdx(i=>i+1);setPicked(null);}
+    },1000);
+  };
+
+  if(done) return React.createElement('div',{style:{padding:24,background:'linear-gradient(135deg,#4ECDC422,#6C63FF22)',borderRadius:16,textAlign:'center'}},
+    React.createElement('div',{style:{fontSize:48}},'📖'),
+    React.createElement('div',{style:{fontSize:22,fontWeight:700,color:'#fff',marginTop:8}},'Vocabulary Master!'),
+    React.createElement('div',{style:{color:'#aaa',marginTop:8}},`${score}/${questions.length} correct`)
+  );
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement('div',{style:{color:'#aaa',fontSize:13,marginBottom:20}},`Word ${idx+1} of ${questions.length} · Score: ${score}`),
+    React.createElement('div',{style:{fontSize:config.large?42:36,fontWeight:800,color:'#4ECDC4',marginBottom:8,letterSpacing:2}},q.word),
+    React.createElement('div',{style:{color:'#666',fontSize:13,marginBottom:20}},'Pick the word closest in meaning'),
+    React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,maxWidth:340,margin:'0 auto'}},
+      ...opts[idx].map((opt,i)=>{
+        let bg='#1e2235',border='#2a2f4a',color='#e0e0ff';
+        if(picked){if(opt===q.answer){bg='#4ECDC422';border='#4ECDC4';}else if(opt===picked){bg='#FF6B6B22';border='#FF6B6B';}}
+        return React.createElement('button',{key:i,onClick:()=>choose(opt),style:{padding:'14px 8px',background:bg,border:`2px solid ${border}`,borderRadius:12,color,fontSize:config.large?16:14,cursor:picked?'default':'pointer',fontWeight:600,transition:'all 0.2s'}},opt);
+      })
+    )
+  );
+}
+
+// ── SPOT THE DIFFERENCE (Recall + Logic) ──────────────────────
+const DIFF_SCENES = [
+  {scene:"🏡 Cozy House Scene",
+   original:["🌳 Big oak tree","🚗 Red car in driveway","☀️ Sunny sky","🌸 Pink flowers","🐕 Brown dog","📬 Blue mailbox"],
+   changed: ["🌳 Big oak tree","🚙 Blue car in driveway","☀️ Sunny sky","🌼 Yellow flowers","🐕 Brown dog","📭 Empty mailbox"],
+   diffs:["Red car → Blue car","Pink flowers → Yellow flowers","Blue mailbox → Empty mailbox"]},
+  {scene:"🍽️ Restaurant Table",
+   original:["🕯️ White candle lit","🍷 Red wine glass","🌹 Red rose vase","🧂 Salt shaker","📋 Menu card","🥖 Bread basket"],
+   changed: ["🕯️ White candle unlit","🥂 Champagne glass","🌹 Red rose vase","🧂 Salt shaker","📋 Menu card","🧆 No bread"],
+   diffs:["Candle lit → Unlit","Red wine → Champagne","Bread basket → Removed"]},
+  {scene:"🏫 Classroom",
+   original:["🖊️ Pen on desk","📚 3 books stacked","🖥️ Computer on","🗺️ World map","🌡️ Thermometer","🎨 Painting on wall"],
+   changed: ["✏️ Pencil on desk","📚 2 books stacked","🖥️ Computer off","🗺️ World map","🌡️ Thermometer","🖼️ Portrait on wall"],
+   diffs:["Pen → Pencil","3 books → 2 books","Computer on → off"]},
+];
+
+function SpotDifference({ config, onComplete }) {
+  const [scene] = useState(()=>DIFF_SCENES[Math.floor(Math.random()*DIFF_SCENES.length)]);
+  const [phase, setPhase] = useState('study');
+  const [found, setFound] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [done, setDone] = useState(false);
+  const [countdown, setCountdown] = useState(5);
+
+  useEffect(()=>{
+    if(phase!=='study') return;
+    const t = setInterval(()=>setCountdown(c=>{
+      if(c<=1){clearInterval(t);setPhase('compare');return 0;}
+      return c-1;
+    }),1000);
+    return ()=>clearInterval(t);
+  },[phase]);
+
+  const checkDiff = (i) => {
+    if(done) return;
+    const isDiff = scene.original[i]!==scene.changed[i];
+    if(isDiff&&!found.includes(i)){
+      const newFound = [...found,i];
+      setFound(newFound);
+      if(newFound.length>=3){setDone(true);onComplete&&onComplete({score:3,total:3});}
+    }
+    setSelected(i);
+    setTimeout(()=>setSelected(null),600);
+  };
+
+  if(phase==='study') return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement('div',{style:{color:'#FFB347',fontWeight:600,fontSize:14,marginBottom:12}},`Study this scene carefully! (${countdown}s)`),
+    React.createElement('div',{style:{fontSize:15,fontWeight:700,color:'#fff',marginBottom:12}},scene.scene),
+    React.createElement('div',{style:{display:'flex',flexDirection:'column',gap:6,maxWidth:340,margin:'0 auto'}},
+      ...scene.original.map((item,i)=>React.createElement('div',{key:i,style:{padding:'10px 14px',background:'#1e2235',border:'1px solid #2a2f4a',borderRadius:10,color:'#e0e0ff',fontSize:config.large?15:13,textAlign:'left'}},item))
+    )
+  );
+
+  return React.createElement('div',null,
+    React.createElement('div',{style:{color:'#4ECDC4',fontWeight:600,fontSize:13,marginBottom:4,textAlign:'center'}},'Tap the items that are DIFFERENT from what you saw:'),
+    React.createElement('div',{style:{color:'#555',fontSize:12,marginBottom:12,textAlign:'center'}},`Found ${found.length}/3 differences`),
+    React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}},
+      ...scene.changed.map((item,i)=>{
+        const isFound = found.includes(i);
+        const isSel = selected===i;
+        return React.createElement('button',{key:i,onClick:()=>checkDiff(i),
+          style:{padding:'10px 10px',background:isFound?'#4ECDC422':isSel?'#FF6B6B22':'#1e2235',
+            border:`2px solid ${isFound?'#4ECDC4':isSel?'#FF6B6B':'#2a2f4a'}`,
+            borderRadius:10,color:isFound?'#4ECDC4':'#e0e0ff',cursor:'pointer',fontSize:config.large?14:12,textAlign:'left',transition:'all 0.2s'}},
+          (isFound?'✓ ':'')+item);
+      })
+    ),
+    done&&React.createElement('div',{style:{marginTop:16,padding:16,background:'linear-gradient(135deg,#4ECDC422,#6C63FF22)',borderRadius:12,textAlign:'center'}},
+      React.createElement('div',{style:{fontSize:36}},'🎉'),
+      React.createElement('div',{style:{color:'#4ECDC4',fontWeight:700,marginTop:4}},'All 3 differences found!')
+    )
+  );
+}
+
 // ── GAME PLAYER ────────────────────────────────────────────────
-const COMPONENTS = { ColorMatch, WhatsGone, OrientationQuiz, WordScramble, NumberPattern, SimonSays, SpatialRecall, MentalMath, WordAssociation, WhereAmI, WhatSeason, TimelineSort, ClockReading, NewsHeadlines };
+const COMPONENTS = { ColorMatch, WhatsGone, OrientationQuiz, WordScramble, NumberPattern, SimonSays, SpatialRecall, MentalMath, WordAssociation, WhereAmI, WhatSeason, TimelineSort, ClockReading, NewsHeadlines, StoryRecall, DigitSpan, SentenceBuilder, SudokuMini, NBack, SynonymFinder, SpotDifference };
 
 function GamePlayer({ game, onBack }) {
   const [completed, setCompleted] = useState(false);
