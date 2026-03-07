@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cognicare by VasudhaivaKutumbakam Software Solutions Pvt. Ltd.</title>
+  <title>Cognicare by Vasudhaiva Kutumbakam Software Solutions Pvt. Ltd.</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <style>
@@ -2237,34 +2237,44 @@ function App() {
           React.createElement('p',{style:{color:'#aaa',fontSize:15,marginBottom:4}},'Choose your game:'),
           React.createElement('p',{style:{color:'#555',fontSize:12}},`${(DOMAINS.find(d=>d.id===domain)||{}).icon} ${(DOMAINS.find(d=>d.id===domain)||{}).label} · ${(LEVELS.find(l=>l.id===level)||{}).label}`)
         ),
-        // All levels as game cards — include domain2 extras
-        React.createElement('div',{style:{display:'flex',flexDirection:'column',gap:12}},
-          ...[...LEVELS.map(l=>{
-            const g = GAMES[domain]&&GAMES[domain][age]&&GAMES[domain][age][l.id];
-            if(!g) return null;
-            const lv = LEVELS.find(lx=>lx.id===l.id);
-            return {key:l.id,g,lv,label:lv.label};
-          }),
-          ...LEVELS.map(l=>{
+        // Games grouped by level: Easy section, Medium section, Hard section
+        React.createElement('div',{style:{display:'flex',flexDirection:'column',gap:24}},
+          ...LEVELS.map(lv=>{
+            // Collect all games for this level from domain and domain2
+            const games = [];
+            const g1 = GAMES[domain]&&GAMES[domain][age]&&GAMES[domain][age][lv.id];
+            if(g1) games.push({key:lv.id+'_1',g:g1});
             const d2 = domain+'2';
-            const g = GAMES[d2]&&GAMES[d2][age]&&GAMES[d2][age][l.id];
-            if(!g) return null;
-            const lv = LEVELS.find(lx=>lx.id===l.id);
-            return {key:d2+l.id,g,lv,label:lv.label+' ★'};
-          })].filter(Boolean).map(({key,g,lv,label})=>
-            React.createElement('div',{key,
-              style:{padding:'16px 18px',background:'#13172a',border:`2px solid #1e2235`,borderRadius:16,transition:'all 0.2s'}},
-              React.createElement('div',{style:{display:'flex',alignItems:'center',marginBottom:10}},
-                React.createElement('span',{style:{fontSize:11,fontWeight:700,color:lv.color,background:lv.color+'22',padding:'2px 8px',borderRadius:20,marginRight:8}},label.toUpperCase()),
-                React.createElement('span',{style:{fontWeight:700,color:'#fff',fontSize:15}},g.name)
+            const g2 = GAMES[d2]&&GAMES[d2][age]&&GAMES[d2][age][lv.id];
+            if(g2) games.push({key:lv.id+'_2',g:g2});
+            if(games.length===0) return null;
+
+            return React.createElement('div',{key:lv.id},
+              // Level header
+              React.createElement('div',{style:{display:'flex',alignItems:'center',gap:10,marginBottom:12}},
+                React.createElement('div',{style:{height:2,flex:1,background:lv.color+'33'}}),
+                React.createElement('span',{style:{fontSize:12,fontWeight:800,color:lv.color,letterSpacing:2,padding:'4px 14px',background:lv.color+'22',borderRadius:20,border:`1px solid ${lv.color}44`}},lv.label.toUpperCase()),
+                React.createElement('div',{style:{height:2,flex:1,background:lv.color+'33'}})
               ),
-              React.createElement('p',{style:{color:'#666',fontSize:12,marginBottom:12}},g.desc),
-              React.createElement('button',{onClick:()=>{setLevel(key);setPlaying(g);},
-                style:{width:'100%',padding:'10px',background:`linear-gradient(135deg,${lv.color},${lv.color}aa)`,
-                  border:'none',borderRadius:10,color:'#0a0e1a',fontWeight:700,cursor:'pointer',fontSize:14}},
-                '▶ Play This Game')
-            )
-          )
+              // Game cards for this level
+              React.createElement('div',{style:{display:'flex',flexDirection:'column',gap:8}},
+                ...games.map(({key,g})=>
+                  React.createElement('div',{key,
+                    style:{padding:'14px 16px',background:'#13172a',border:`1px solid #1e2235`,borderRadius:14,
+                      display:'flex',alignItems:'center',justifyContent:'space-between',gap:12,transition:'all 0.2s'}},
+                    React.createElement('div',{style:{flex:1}},
+                      React.createElement('div',{style:{fontWeight:700,color:'#fff',fontSize:15,marginBottom:3}},g.name),
+                      React.createElement('div',{style:{color:'#555',fontSize:12}},g.desc)
+                    ),
+                    React.createElement('button',{onClick:()=>{setLevel(key);setPlaying(g);},
+                      style:{flexShrink:0,padding:'9px 16px',background:`linear-gradient(135deg,${lv.color},${lv.color}bb)`,
+                        border:'none',borderRadius:10,color:'#0a0e1a',fontWeight:700,cursor:'pointer',fontSize:13,whiteSpace:'nowrap'}},
+                      '▶ Play')
+                  )
+                )
+              )
+            );
+          }).filter(Boolean)
         ),
         React.createElement('button',{onClick:()=>setLevel(null),style:{marginTop:14,background:'none',border:'1px solid #2a2f4a',borderRadius:10,color:'#555',cursor:'pointer',fontSize:12,padding:'8px 16px',width:'100%'}},'← Back to Domain')
       )
