@@ -129,6 +129,12 @@ const GAMES = {
       hard:  { name:"Odd One Out",     desc:"Which word doesn't belong?",       component:"WordAssociation", config:{difficulty:"medium",large:true} },
     },
   },
+  language2:{
+    kids:{   easy:{name:"Rhyme Time",desc:"Which word rhymes?",component:"RhymeTime",config:{difficulty:"easy"}},medium:{name:"Missing Letter",desc:"Fill in the blank letter",component:"MissingLetter",config:{difficulty:"easy"}},hard:{name:"Category Fluency",desc:"Tap words that belong to the category",component:"CategoryFluency",config:{difficulty:"easy"}}},
+    teens:{  easy:{name:"Rhyme Time",desc:"Which word rhymes?",component:"RhymeTime",config:{difficulty:"medium"}},medium:{name:"Missing Letter",desc:"Fill in the missing letter",component:"MissingLetter",config:{difficulty:"medium"}},hard:{name:"Category Fluency",desc:"Race to find category members",component:"CategoryFluency",config:{difficulty:"medium"}}},
+    adults:{ easy:{name:"Missing Letter",desc:"Complete the word",component:"MissingLetter",config:{difficulty:"medium"}},medium:{name:"Category Fluency",desc:"Tap words in the category",component:"CategoryFluency",config:{difficulty:"hard"}},hard:{name:"Rhyme Time",desc:"Advanced rhyming challenge",component:"RhymeTime",config:{difficulty:"hard"}}},
+    seniors:{easy:{name:"Rhyme Time",desc:"Which word rhymes?",component:"RhymeTime",config:{difficulty:"easy",large:true}},medium:{name:"Missing Letter",desc:"Fill in the missing letter",component:"MissingLetter",config:{difficulty:"easy",large:true}},hard:{name:"Category Fluency",desc:"Tap words in the category",component:"CategoryFluency",config:{difficulty:"easy",large:true}}},
+  },
   logic:{
     kids:{
       easy:  { name:"Quick Maths",     desc:"Simple addition and subtraction",  component:"MentalMath",    config:{ops:['+'],maxNum:5,rounds:5} },
@@ -150,6 +156,12 @@ const GAMES = {
       medium:{ name:"Number Logic",    desc:"Find the next number",             component:"NumberPattern", config:{difficulty:"medium"} },
       hard:  { name:"Mini Sudoku",     desc:"Fill the 4×4 Sudoku grid",         component:"SudokuMini",    config:{size:"4x4",large:true} },
     },
+  },
+  logic2:{
+    kids:{   easy:{name:"Shape Analogy",desc:"A is to B as C is to ?",component:"ShapeAnalogy",config:{difficulty:"easy"}},medium:{name:"Visual Matrix",desc:"What completes the 3x3 pattern?",component:"VisualMatrix",config:{difficulty:"easy"}},hard:{name:"Jigsaw",desc:"Memorise and restore the grid",component:"JigsawPreview",config:{studyTime:5}}},
+    teens:{  easy:{name:"Shape Analogy",desc:"A is to B as C is to ?",component:"ShapeAnalogy",config:{difficulty:"medium"}},medium:{name:"Visual Matrix",desc:"Find the missing pattern piece",component:"VisualMatrix",config:{difficulty:"medium"}},hard:{name:"Jigsaw",desc:"Memorise and restore the grid",component:"JigsawPreview",config:{studyTime:4}}},
+    adults:{ easy:{name:"Shape Analogy",desc:"Emoji-based analogy reasoning",component:"ShapeAnalogy",config:{difficulty:"medium"}},medium:{name:"Visual Matrix",desc:"Complete the pattern matrix",component:"VisualMatrix",config:{difficulty:"hard"}},hard:{name:"Jigsaw",desc:"Fast memorise and restore",component:"JigsawPreview",config:{studyTime:3}}},
+    seniors:{easy:{name:"Shape Analogy",desc:"A is to B as C is to ?",component:"ShapeAnalogy",config:{difficulty:"easy",large:true}},medium:{name:"Visual Matrix",desc:"What completes the pattern?",component:"VisualMatrix",config:{difficulty:"easy",large:true}},hard:{name:"Jigsaw",desc:"Memorise and restore the grid",component:"JigsawPreview",config:{studyTime:6,large:true}}},
   },
 };
 
@@ -1641,8 +1653,479 @@ function SpotDifference({ config, onComplete }) {
   );
 }
 
+
+// ══════════════════════════════════════════════════════════════
+// BATCH 3 — 7 NEW GAMES
+// ══════════════════════════════════════════════════════════════
+
+// ── SHAPE ANALOGY (Logic) ─────────────────────────────────────
+const ANALOGIES = {
+  easy:[
+    {a:"🐱",b:"🐱🐱",c:"🐶",answer:"🐶🐶",opts:["🐶","🐶🐶","🐶🐶🐶","🐱🐶"],hint:"Count doubles"},
+    {a:"🌑",b:"🌕",c:"🌧️",answer:"☀️",opts:["🌧️","☀️","🌙","⭐"],hint:"Dark → Light"},
+    {a:"🔴",b:"🟥",c:"🔵",answer:"🟦",opts:["🟦","🟩","🟨","🔵"],hint:"Circle → Square"},
+    {a:"1️⃣",b:"2️⃣",c:"3️⃣",answer:"4️⃣",opts:["3️⃣","4️⃣","5️⃣","6️⃣"],hint:"Count up by 1"},
+    {a:"🐣",b:"🐔",c:"🥚",answer:"🦎",opts:["🥚","🦎","🐊","🐸"],hint:"Baby → Adult"},
+  ],
+  medium:[
+    {a:"🐛",b:"🦋",c:"🥚",answer:"🐣",opts:["🐔","🐣","🦆","🦅"],hint:"Life cycle stages"},
+    {a:"🌱",b:"🌳",c:"🐱",answer:"🦁",opts:["🐱","🐯","🦁","🐻"],hint:"Small → Big version"},
+    {a:"🎸",b:"🎵",c:"🖌️",answer:"🖼️",opts:["🎨","🖼️","✏️","📝"],hint:"Tool → Result"},
+    {a:"📚",b:"🎓",c:"🏋️",answer:"🥇",opts:["💪","🏋️","🥇","🎽"],hint:"Practice → Achievement"},
+    {a:"🐝",b:"🍯",c:"🐄",answer:"🥛",opts:["🥩","🥚","🥛","🧀"],hint:"Animal → Product"},
+  ],
+  hard:[
+    {a:"🌊",b:"🏄",c:"❄️",answer:"⛷️",opts:["🏊","⛷️","🧊","🎿"],hint:"Element → Sport"},
+    {a:"🌍",b:"🛸",c:"🌊",answer:"🚢",opts:["🐠","🤿","🚢","⚓"],hint:"Domain → Vehicle"},
+    {a:"📖",b:"💡",c:"🎵",answer:"💃",opts:["🎹","💃","🎤","🎭"],hint:"Input → Inspired action"},
+    {a:"🌅",b:"☕",c:"🌃",answer:"🍷",opts:["🌙","🍷","🍺","🥂"],hint:"Time of day → Drink"},
+    {a:"🔥",b:"💨",c:"🌊",answer:"🌱",opts:["🌱","⛏️","🪨","🌋"],hint:"Element that defeats it"},
+  ],
+};
+
+function ShapeAnalogy({ config, onComplete }) {
+  const bank = ANALOGIES[config.difficulty]||ANALOGIES.easy;
+  const [questions] = useState(()=>[...bank].sort(()=>Math.random()-0.5).slice(0,5));
+  const [idx, setIdx] = useState(0);
+  const [picked, setPicked] = useState(null);
+  const [score, setScore] = useState(0);
+  const [done, setDone] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const [opts] = useState(()=>questions.map(q=>[...new Set([q.answer,...q.opts])].sort(()=>Math.random()-0.5).slice(0,4)));
+  const q = questions[idx];
+
+  const choose = (opt) => {
+    if(picked) return; setPicked(opt);
+    const correct = opt===q.answer;
+    if(correct) setScore(s=>s+1);
+    setTimeout(()=>{
+      if(idx+1>=questions.length){setDone(true);onComplete&&onComplete({score:score+(correct?1:0),total:questions.length});}
+      else{setIdx(i=>i+1);setPicked(null);setShowHint(false);}
+    },1100);
+  };
+
+  if(done) return React.createElement('div',{style:{padding:24,background:'linear-gradient(135deg,#A8E6CF22,#6C63FF22)',borderRadius:16,textAlign:'center'}},
+    React.createElement('div',{style:{fontSize:48}},'🧩'),
+    React.createElement('div',{style:{fontSize:22,fontWeight:700,color:'#fff',marginTop:8}},'Analogy Master!'),
+    React.createElement('div',{style:{color:'#aaa',marginTop:8}},`${score}/${questions.length} correct`)
+  );
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement('div',{style:{color:'#aaa',fontSize:13,marginBottom:20}},`Question ${idx+1} of ${questions.length} · Score: ${score}`),
+    React.createElement('div',{style:{display:'flex',alignItems:'center',justifyContent:'center',gap:6,marginBottom:24,flexWrap:'wrap'}},
+      React.createElement('div',{style:{padding:'10px 14px',background:'#1e2235',border:'2px solid #6C63FF44',borderRadius:12,fontSize:config.large?34:28}},q.a),
+      React.createElement('span',{style:{color:'#555',fontSize:14,fontWeight:700}},'→'),
+      React.createElement('div',{style:{padding:'10px 14px',background:'#1e2235',border:'2px solid #6C63FF44',borderRadius:12,fontSize:config.large?34:28}},q.b),
+      React.createElement('span',{style:{color:'#6C63FF',fontSize:18,fontWeight:700,margin:'0 4px'}},'∷'),
+      React.createElement('div',{style:{padding:'10px 14px',background:'#1e2235',border:'2px solid #FFB34744',borderRadius:12,fontSize:config.large?34:28}},q.c),
+      React.createElement('span',{style:{color:'#555',fontSize:14,fontWeight:700}},'→'),
+      React.createElement('div',{style:{padding:'10px 14px',background:'#FFB34722',border:'2px dashed #FFB347',borderRadius:12,fontSize:config.large?34:28}},'?')
+    ),
+    React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,maxWidth:300,margin:'0 auto 12px'}},
+      ...opts[idx].map((opt,i)=>{
+        let bg='#1e2235',border='#2a2f4a';
+        if(picked){if(opt===q.answer){bg='#4ECDC422';border='#4ECDC4';}else if(opt===picked){bg='#FF6B6B22';border='#FF6B6B';}}
+        return React.createElement('button',{key:i,onClick:()=>choose(opt),
+          style:{padding:'14px',background:bg,border:`2px solid ${border}`,borderRadius:12,fontSize:config.large?32:26,cursor:picked?'default':'pointer',transition:'all 0.2s'}},opt);
+      })
+    ),
+    !picked&&React.createElement('button',{onClick:()=>setShowHint(h=>!h),
+      style:{background:'none',border:'1px solid #333',borderRadius:8,color:'#555',cursor:'pointer',fontSize:12,padding:'4px 12px'}},
+      showHint?`💡 ${q.hint}`:'💡 Hint')
+  );
+}
+
+// ── JIGSAW PREVIEW (Memory + Logic) ───────────────────────────
+const JIGSAW_IMAGES = [
+  {name:"Sunny Beach",  emoji:["🌊","🏖️","☀️","🌴","🐚","🦀","⛵","🐠","🕶️","🏄","🌅","🐬"],cols:4},
+  {name:"Forest Friends",emoji:["🦊","🐺","🦌","🐻","🍄","🌲","🦉","🐿️","🌿","🦋","🍁","🐦"],cols:4},
+  {name:"City at Night", emoji:["🌃","🌉","🚕","🏙️","⭐","🌙","🎆","🚦","🏢","💡","🎭","🚇"],cols:4},
+  {name:"Farm Scene",   emoji:["🐄","🐖","🐓","🌻","🚜","🌾","🐑","🐴","🥕","🌽","🐕","🏡"],cols:4},
+];
+
+function JigsawPreview({ config, onComplete }) {
+  const [image] = useState(()=>JIGSAW_IMAGES[Math.floor(Math.random()*JIGSAW_IMAGES.length)]);
+  const [phase, setPhase] = useState('study');
+  const [pieces, setPieces] = useState(()=>image.emoji.map((e,i)=>({emoji:e,correct:i})));
+  const [selected, setSelected] = useState(null);
+  const [moves, setMoves] = useState(0);
+  const [solved, setSolved] = useState(false);
+  const [countdown, setCountdown] = useState(config.studyTime||5);
+
+  useEffect(()=>{
+    if(phase!=='study') return;
+    const t = setInterval(()=>setCountdown(c=>{
+      if(c<=1){
+        clearInterval(t);
+        setPieces(prev=>{
+          const arr=[...prev];
+          for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]];}
+          return arr;
+        });
+        setPhase('play');
+        return 0;
+      }
+      return c-1;
+    }),1000);
+    return ()=>clearInterval(t);
+  },[phase]);
+
+  const tap = (i) => {
+    if(phase!=='play'||solved) return;
+    if(selected===null){setSelected(i);return;}
+    if(selected===i){setSelected(null);return;}
+    setPieces(prev=>{
+      const arr=[...prev];
+      [arr[selected],arr[i]]=[arr[i],arr[selected]];
+      if(arr.every((p,idx)=>p.correct===idx)){setSolved(true);onComplete&&onComplete({score:1,total:1,moves:moves+1});}
+      return arr;
+    });
+    setMoves(m=>m+1);
+    setSelected(null);
+  };
+
+  if(phase==='study') return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement('div',{style:{color:'#FFB347',fontWeight:600,fontSize:14,marginBottom:8}},`Memorise the layout! (${countdown}s)`),
+    React.createElement('div',{style:{fontSize:15,fontWeight:700,color:'#fff',marginBottom:12}},image.name),
+    React.createElement('div',{style:{display:'inline-grid',gridTemplateColumns:`repeat(${image.cols},1fr)`,gap:3,background:'#6C63FF',padding:3,borderRadius:12}},
+      ...image.emoji.map((e,i)=>React.createElement('div',{key:i,style:{width:54,height:54,display:'flex',alignItems:'center',justifyContent:'center',fontSize:26,background:'#1e2235',borderRadius:6}},e))
+    )
+  );
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    solved
+      ? React.createElement('div',{style:{padding:24,background:'linear-gradient(135deg,#6C63FF22,#4ECDC422)',borderRadius:16}},
+          React.createElement('div',{style:{fontSize:48}},'🎉'),
+          React.createElement('div',{style:{fontSize:22,fontWeight:700,color:'#fff',marginTop:8}},'Puzzle Solved!'),
+          React.createElement('div',{style:{color:'#aaa',marginTop:8}},`Completed in ${moves} swaps`)
+        )
+      : React.createElement('div',null,
+          React.createElement('div',{style:{color:'#aaa',fontSize:13,marginBottom:4}},`Restore the original layout · ${moves} swaps`),
+          React.createElement('div',{style:{color:'#555',fontSize:12,marginBottom:10}},'Tap two pieces to swap them'),
+          React.createElement('div',{style:{display:'inline-grid',gridTemplateColumns:`repeat(${image.cols},1fr)`,gap:3,background:selected!==null?'#FFB347':'#2a2f4a',padding:3,borderRadius:12,transition:'background 0.2s'}},
+            ...pieces.map((p,i)=>React.createElement('div',{key:i,onClick:()=>tap(i),
+              style:{width:54,height:54,display:'flex',alignItems:'center',justifyContent:'center',fontSize:26,
+                background:selected===i?'#FFB34733':p.correct===i?'#4ECDC411':'#1e2235',
+                borderRadius:6,cursor:'pointer',border:selected===i?'2px solid #FFB347':p.correct===i?'2px solid #4ECDC433':'2px solid transparent',
+                transition:'all 0.15s'}},p.emoji))
+          ),
+          React.createElement('div',{style:{marginTop:10,color:'#555',fontSize:12}},
+            `✓ ${pieces.filter((p,i)=>p.correct===i).length}/${pieces.length} in place`)
+        )
+  );
+}
+
+// ── VISUAL MATRIX (Logic) ─────────────────────────────────────
+const MATRICES = {
+  easy:[
+    {grid:["🔴","🔵","🟢","🔴","🔵","🟢","🔴","🔵","?"],answer:"🟢",opts:["🔴","🔵","🟢","🟡"],hint:"Pattern repeats every 3"},
+    {grid:["⭐","⭐","🌙","⭐","⭐","🌙","⭐","⭐","?"],answer:"🌙",opts:["⭐","🌙","☀️","💫"],hint:"Two then one"},
+    {grid:["🐱","🐶","🐱","🐶","🐱","🐶","🐱","🐶","?"],answer:"🐱",opts:["🐱","🐶","🐰","🐻"],hint:"Alternating pattern"},
+    {grid:["1️⃣","2️⃣","3️⃣","2️⃣","3️⃣","4️⃣","3️⃣","4️⃣","?"],answer:"5️⃣",opts:["4️⃣","5️⃣","6️⃣","3️⃣"],hint:"Each row increases by 1"},
+  ],
+  medium:[
+    {grid:["🟥","🟧","🟨","🟧","🟨","🟩","🟨","🟩","?"],answer:"🟦",opts:["🟩","🟦","🟪","🟥"],hint:"Diagonal colour shift"},
+    {grid:["🌑","🌒","🌓","🌒","🌓","🌔","🌓","🌔","?"],answer:"🌕",opts:["🌔","🌕","🌖","🌓"],hint:"Moon phases progress"},
+    {grid:["🐣","🐥","🐔","🐥","🐔","🦅","🐔","🦅","?"],answer:"🦁",opts:["🦅","🦁","🐯","🦊"],hint:"Each stage grows bigger"},
+    {grid:["➕","✖️","➕","✖️","➕","✖️","➕","✖️","?"],answer:"➕",opts:["➕","✖️","➖","➗"],hint:"Alternating operators"},
+  ],
+  hard:[
+    {grid:["🌱","🌿","🌳","🌿","🌳","🌲","🌳","🌲","?"],answer:"🎋",opts:["🌲","🎋","🌴","🌵"],hint:"Each diagonal advances growth"},
+    {grid:["💧","🌊","🌧️","🌊","🌧️","⛈️","🌧️","⛈️","?"],answer:"🌪️",opts:["⛈️","🌪️","🌫️","❄️"],hint:"Water intensity escalates"},
+    {grid:["🎵","🎶","🎼","🎶","🎼","🎹","🎼","🎹","?"],answer:"🎻",opts:["🎹","🎻","🎺","🥁"],hint:"Musical complexity grows"},
+    {grid:["🔺","🔶","🔷","🔶","🔷","🔹","🔷","🔹","?"],answer:"🔸",opts:["🔹","🔸","🔴","🔵"],hint:"Shape and size transform"},
+  ],
+};
+
+function VisualMatrix({ config, onComplete }) {
+  const bank = MATRICES[config.difficulty]||MATRICES.easy;
+  const [questions] = useState(()=>[...bank].sort(()=>Math.random()-0.5).slice(0,4));
+  const [idx, setIdx] = useState(0);
+  const [picked, setPicked] = useState(null);
+  const [score, setScore] = useState(0);
+  const [done, setDone] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const [opts] = useState(()=>questions.map(q=>[...new Set([q.answer,...q.opts])].sort(()=>Math.random()-0.5).slice(0,4)));
+  const q = questions[idx];
+
+  const choose = (opt) => {
+    if(picked) return; setPicked(opt);
+    const correct = opt===q.answer;
+    if(correct) setScore(s=>s+1);
+    setTimeout(()=>{
+      if(idx+1>=questions.length){setDone(true);onComplete&&onComplete({score:score+(correct?1:0),total:questions.length});}
+      else{setIdx(i=>i+1);setPicked(null);setShowHint(false);}
+    },1100);
+  };
+
+  if(done) return React.createElement('div',{style:{padding:24,background:'linear-gradient(135deg,#A8E6CF22,#FFB34722)',borderRadius:16,textAlign:'center'}},
+    React.createElement('div',{style:{fontSize:48}},'🔲'),
+    React.createElement('div',{style:{fontSize:22,fontWeight:700,color:'#fff',marginTop:8}},'Matrix Master!'),
+    React.createElement('div',{style:{color:'#aaa',marginTop:8}},`${score}/${questions.length} correct`)
+  );
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement('div',{style:{color:'#aaa',fontSize:13,marginBottom:16}},`Matrix ${idx+1} of ${questions.length} · Score: ${score}`),
+    React.createElement('div',{style:{color:'#FFB347',fontSize:13,fontWeight:600,marginBottom:12}},'What completes the pattern?'),
+    React.createElement('div',{style:{display:'inline-grid',gridTemplateColumns:'repeat(3,1fr)',gap:4,background:'#2a2f4a',padding:4,borderRadius:12,marginBottom:20}},
+      ...q.grid.map((cell,i)=>React.createElement('div',{key:i,
+        style:{width:config.large?62:54,height:config.large?62:54,display:'flex',alignItems:'center',justifyContent:'center',
+          fontSize:config.large?28:24,background:cell==='?'?'#FFB34722':'#1e2235',
+          border:cell==='?'?'2px dashed #FFB347':'2px solid transparent',borderRadius:8}},cell))
+    ),
+    React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,maxWidth:280,margin:'0 auto 12px'}},
+      ...opts[idx].map((opt,i)=>{
+        let bg='#1e2235',border='#2a2f4a';
+        if(picked){if(opt===q.answer){bg='#4ECDC422';border='#4ECDC4';}else if(opt===picked){bg='#FF6B6B22';border='#FF6B6B';}}
+        return React.createElement('button',{key:i,onClick:()=>choose(opt),
+          style:{padding:'14px',background:bg,border:`2px solid ${border}`,borderRadius:12,fontSize:config.large?30:24,cursor:picked?'default':'pointer',transition:'all 0.2s'}},opt);
+      })
+    ),
+    !picked&&React.createElement('button',{onClick:()=>setShowHint(h=>!h),
+      style:{background:'none',border:'1px solid #333',borderRadius:8,color:'#555',cursor:'pointer',fontSize:12,padding:'4px 12px'}},
+      showHint?`💡 ${q.hint}`:'💡 Hint')
+  );
+}
+
+// ── CATEGORY FLUENCY (Language) ───────────────────────────────
+const CATEGORIES = {
+  easy:[
+    {category:"🐾 Animals",valid:["Dog","Cat","Lion","Tiger","Elephant","Giraffe","Zebra","Bear","Wolf","Fox","Rabbit","Horse","Cow","Pig","Sheep","Monkey","Penguin","Dolphin"],invalid:["Apple","Chair","Cloud","Book","River"]},
+    {category:"🍎 Fruits",valid:["Apple","Banana","Mango","Grape","Orange","Strawberry","Pineapple","Watermelon","Peach","Cherry","Lemon","Kiwi","Plum","Pear","Melon"],invalid:["Carrot","Dog","Table","Pen","Stone"]},
+    {category:"🎨 Colours",valid:["Red","Blue","Green","Yellow","Orange","Purple","Pink","Brown","White","Black","Grey","Teal","Maroon","Cyan","Violet"],invalid:["Tall","Happy","Quick","Loud","Soft"]},
+  ],
+  medium:[
+    {category:"🌍 Countries",valid:["India","France","Brazil","Japan","Germany","Australia","Canada","Italy","Spain","Mexico","China","Russia","Egypt","Kenya","Argentina"],invalid:["Paris","London","Tokyo","Mountain","River"]},
+    {category:"🎵 Musical Instruments",valid:["Guitar","Piano","Violin","Drums","Flute","Trumpet","Saxophone","Cello","Harp","Clarinet","Oboe","Trombone","Sitar","Tabla"],invalid:["Singing","Dancing","Painting","Writing","Running"]},
+    {category:"⚽ Sports",valid:["Cricket","Football","Tennis","Basketball","Swimming","Boxing","Golf","Rugby","Baseball","Volleyball","Badminton","Hockey","Cycling","Wrestling"],invalid:["Chess","Cooking","Reading","Painting","Knitting"]},
+  ],
+  hard:[
+    {category:"🔬 Elements",valid:["Oxygen","Hydrogen","Carbon","Nitrogen","Gold","Silver","Iron","Copper","Helium","Neon","Calcium","Sodium","Potassium","Uranium"],invalid:["Water","Salt","Bronze","Steel","Air"]},
+    {category:"🏛️ Ancient Civilisations",valid:["Roman","Greek","Egyptian","Mesopotamian","Mayan","Aztec","Incan","Persian","Chinese","Indian","Phoenician","Carthaginian"],invalid:["Medieval","Victorian","Modern","Colonial","Industrial"]},
+    {category:"🧠 Psychological Terms",valid:["Cognition","Perception","Empathy","Anxiety","Depression","Neurosis","Psychosis","Resilience","Attachment","Motivation","Inhibition"],invalid:["Diagnosis","Treatment","Medicine","Surgery","Biology"]},
+  ],
+};
+
+function CategoryFluency({ config, onComplete }) {
+  const bank = CATEGORIES[config.difficulty]||CATEGORIES.easy;
+  const [cat] = useState(()=>bank[Math.floor(Math.random()*bank.length)]);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [phase, setPhase] = useState('play');
+  const [words, setWords] = useState(()=>{
+    const pool = [...cat.valid.slice(0,10),...cat.invalid.slice(0,5)].sort(()=>Math.random()-0.5);
+    return pool.map(w=>({word:w,tapped:false,correct:null}));
+  });
+  const [score, setScore] = useState(0);
+
+  useEffect(()=>{
+    if(phase!=='play') return;
+    const t = setInterval(()=>setTimeLeft(s=>{
+      if(s<=1){clearInterval(t);setPhase('done');
+        const correct = words.filter(w=>w.tapped&&cat.valid.includes(w.word)).length;
+        const wrong   = words.filter(w=>w.tapped&&!cat.valid.includes(w.word)).length;
+        onComplete&&onComplete({score:correct-wrong,total:cat.valid.slice(0,10).length});
+        return 0;}
+      return s-1;
+    }),1000);
+    return ()=>clearInterval(t);
+  },[phase]);
+
+  const tap = (i) => {
+    if(phase!=='play') return;
+    setWords(prev=>{
+      const arr=[...prev];
+      if(arr[i].tapped) return arr;
+      const isValid = cat.valid.includes(arr[i].word);
+      arr[i]={...arr[i],tapped:true,correct:isValid};
+      setScore(s=>s+(isValid?1:-1));
+      return arr;
+    });
+  };
+
+  const colorScheme = timeLeft>10?'#4ECDC4':timeLeft>5?'#FFB347':'#FF6B6B';
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}},
+      React.createElement('div',{style:{fontSize:15,fontWeight:700,color:'#fff'}},cat.category),
+      React.createElement('div',{style:{fontSize:20,fontWeight:800,color:colorScheme}},`${timeLeft}s`)
+    ),
+    phase==='play'&&React.createElement('div',{style:{color:'#aaa',fontSize:12,marginBottom:14}},'Tap ONLY words that belong to this category!'),
+    React.createElement('div',{style:{display:'flex',flexWrap:'wrap',gap:8,justifyContent:'center',marginBottom:16}},
+      ...words.map((w,i)=>{
+        let bg='#1e2235',border='#2a2f4a',color='#e0e0ff';
+        if(w.tapped){bg=w.correct?'#4ECDC422':'#FF6B6B22';border=w.correct?'#4ECDC4':'#FF6B6B';color=w.correct?'#4ECDC4':'#FF6B6B';}
+        return React.createElement('button',{key:i,onClick:()=>tap(i),
+          style:{padding:'9px 16px',background:bg,border:`2px solid ${border}`,borderRadius:20,color,fontSize:config.large?15:13,cursor:w.tapped||phase!=='play'?'default':'pointer',fontWeight:600,transition:'all 0.2s'}},
+          w.tapped?(w.correct?'✓ ':'✗ ')+w.word:w.word);
+      })
+    ),
+    phase==='play'&&React.createElement('div',{style:{color:'#555',fontSize:13}},`Score: ${score}`),
+    phase==='done'&&React.createElement('div',{style:{padding:20,background:'linear-gradient(135deg,#4ECDC422,#6C63FF22)',borderRadius:14}},
+      React.createElement('div',{style:{fontSize:36}},'⏱️'),
+      React.createElement('div',{style:{fontSize:20,fontWeight:700,color:'#fff',marginTop:6}},'Time\'s up!'),
+      React.createElement('div',{style:{color:'#aaa',marginTop:4}},`Final score: ${score}`)
+    )
+  );
+}
+
+// ── RHYME TIME (Language) ─────────────────────────────────────
+const RHYMES = {
+  easy:[
+    {word:"Cat",answer:"Hat",opts:["Dog","Hat","Sun","Tree"],hint:"Sits on your head"},
+    {word:"Sun",answer:"Run",opts:["Moon","Star","Run","Sky"],hint:"What you do fast"},
+    {word:"Ball",answer:"Fall",opts:["Play","Fall","Jump","High"],hint:"Autumn season"},
+    {word:"Blue",answer:"Clue",opts:["Red","Clue","Green","Sky"],hint:"A hint or sign"},
+    {word:"Night",answer:"Light",opts:["Dark","Light","Moon","Star"],hint:"Helps you see"},
+    {word:"Tree",answer:"Bee",opts:["Leaf","Bee","Bush","Root"],hint:"It makes honey"},
+    {word:"Rain",answer:"Train",opts:["Snow","Train","Cloud","Storm"],hint:"Travels on tracks"},
+  ],
+  medium:[
+    {word:"Flower",answer:"Tower",opts:["Garden","Tower","Petal","Bloom"],hint:"A tall building"},
+    {word:"Dream",answer:"Stream",opts:["Sleep","Stream","Night","Cloud"],hint:"Flowing water"},
+    {word:"Bright",answer:"Fright",opts:["Light","Fright","Dark","Shine"],hint:"A sudden scare"},
+    {word:"Brave",answer:"Cave",opts:["Bold","Cave","Strong","Hero"],hint:"Bats live here"},
+    {word:"Stone",answer:"Phone",opts:["Rock","Phone","Pebble","Hard"],hint:"You call people on it"},
+    {word:"Crown",answer:"Town",opts:["King","Town","Gold","Jewel"],hint:"A small city"},
+  ],
+  hard:[
+    {word:"Whisper",answer:"Crispy",opts:["Louder","Crispy","Shout","Quiet"],hint:"Crunchy texture"},
+    {word:"Crimson",answer:"Brimstone",opts:["Scarlet","Brimstone","Ruby","Garnet"],hint:"Fire and sulphur"},
+    {word:"Tranquil",answer:"Rankle",opts:["Peaceful","Rankle","Serene","Calm"],hint:"To irritate"},
+    {word:"Hollow",answer:"Follow",opts:["Empty","Follow","Cave","Deep"],hint:"To go after someone"},
+    {word:"Slumber",answer:"Umber",opts:["Sleep","Umber","Dream","Rest"],hint:"A dark brown pigment"},
+  ],
+};
+
+function RhymeTime({ config, onComplete }) {
+  const bank = RHYMES[config.difficulty]||RHYMES.easy;
+  const [questions] = useState(()=>[...bank].sort(()=>Math.random()-0.5).slice(0,5));
+  const [idx, setIdx] = useState(0);
+  const [picked, setPicked] = useState(null);
+  const [score, setScore] = useState(0);
+  const [done, setDone] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const [opts] = useState(()=>questions.map(q=>[...new Set([q.answer,...q.opts])].sort(()=>Math.random()-0.5).slice(0,4)));
+  const q = questions[idx];
+
+  const choose = (opt) => {
+    if(picked) return; setPicked(opt);
+    const correct = opt===q.answer;
+    if(correct) setScore(s=>s+1);
+    setTimeout(()=>{
+      if(idx+1>=questions.length){setDone(true);onComplete&&onComplete({score:score+(correct?1:0),total:questions.length});}
+      else{setIdx(i=>i+1);setPicked(null);setShowHint(false);}
+    },1000);
+  };
+
+  if(done) return React.createElement('div',{style:{padding:24,background:'linear-gradient(135deg,#4ECDC422,#FFB34722)',borderRadius:16,textAlign:'center'}},
+    React.createElement('div',{style:{fontSize:48}},'🎵'),
+    React.createElement('div',{style:{fontSize:22,fontWeight:700,color:'#fff',marginTop:8}},'Rhyme Master!'),
+    React.createElement('div',{style:{color:'#aaa',marginTop:8}},`${score}/${questions.length} correct`)
+  );
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement('div',{style:{color:'#aaa',fontSize:13,marginBottom:20}},`Rhyme ${idx+1} of ${questions.length} · Score: ${score}`),
+    React.createElement('div',{style:{fontSize:config.large?44:38,fontWeight:800,color:'#4ECDC4',marginBottom:6,letterSpacing:2}},q.word),
+    React.createElement('div',{style:{color:'#555',fontSize:13,marginBottom:20}},'Which word rhymes with this?'),
+    React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,maxWidth:320,margin:'0 auto 12px'}},
+      ...opts[idx].map((opt,i)=>{
+        let bg='#1e2235',border='#2a2f4a',color='#e0e0ff';
+        if(picked){if(opt===q.answer){bg='#4ECDC422';border='#4ECDC4';}else if(opt===picked){bg='#FF6B6B22';border='#FF6B6B';}}
+        return React.createElement('button',{key:i,onClick:()=>choose(opt),
+          style:{padding:'14px 8px',background:bg,border:`2px solid ${border}`,borderRadius:12,color,fontSize:config.large?16:14,cursor:picked?'default':'pointer',fontWeight:600,transition:'all 0.2s'}},opt);
+      })
+    ),
+    !picked&&React.createElement('button',{onClick:()=>setShowHint(h=>!h),
+      style:{background:'none',border:'1px solid #333',borderRadius:8,color:'#555',cursor:'pointer',fontSize:12,padding:'4px 12px'}},
+      showHint?`💡 ${q.hint}`:'💡 Hint')
+  );
+}
+
+// ── MISSING LETTER (Language) ─────────────────────────────────
+const MISSING_LETTER_DATA = {
+  easy:[
+    {word:"C_T",answer:"A",display:"C _ T",opts:["A","O","I","U"],full:"CAT",hint:"A small furry pet"},
+    {word:"D_G",answer:"O",display:"D _ G",opts:["O","I","A","U"],full:"DOG",hint:"Man's best friend"},
+    {word:"S_N",answer:"U",display:"S _ N",opts:["U","A","O","I"],full:"SUN",hint:"Shines in the sky"},
+    {word:"B_D",answer:"E",display:"B _ D",opts:["E","A","I","O"],full:"BED",hint:"You sleep in it"},
+    {word:"H_T",answer:"A",display:"H _ T",opts:["A","O","I","U"],full:"HAT",hint:"Worn on the head"},
+    {word:"C_P",answer:"U",display:"C _ P",opts:["U","A","O","I"],full:"CUP",hint:"You drink from it"},
+    {word:"R_N",answer:"U",display:"R _ N",opts:["U","A","I","O"],full:"RUN",hint:"Move fast on foot"},
+  ],
+  medium:[
+    {word:"BR_IN",answer:"A",display:"BR _ IN",opts:["A","E","I","O"],full:"BRAIN",hint:"Think with this"},
+    {word:"CL_UD",answer:"O",display:"CL _ UD",opts:["O","A","E","U"],full:"CLOUD",hint:"Floats in the sky"},
+    {word:"FL_ME",answer:"A",display:"FL _ ME",opts:["A","I","O","U"],full:"FLAME",hint:"Fire produces this"},
+    {word:"GR_PE",answer:"A",display:"GR _ PE",opts:["A","E","I","O"],full:"GRAPE",hint:"Small purple fruit"},
+    {word:"ST_NE",answer:"O",display:"ST _ NE",opts:["O","A","I","U"],full:"STONE",hint:"Hard rock"},
+    {word:"WH_LE",answer:"A",display:"WH _ LE",opts:["A","I","O","E"],full:"WHALE",hint:"Biggest sea creature"},
+  ],
+  hard:[
+    {word:"KN_WLEDGE",answer:"O",display:"KN _ WLEDGE",opts:["O","A","E","I"],full:"KNOWLEDGE",hint:"What you gain from learning"},
+    {word:"EX_MPLE",answer:"A",display:"EX _ MPLE",opts:["A","I","O","E"],full:"EXAMPLE",hint:"An illustration or instance"},
+    {word:"M_GNIFICENT",answer:"A",display:"M _ GNIFICENT",opts:["A","E","I","O"],full:"MAGNIFICENT",hint:"Extremely beautiful"},
+    {word:"TR_NSFORM",answer:"A",display:"TR _ NSFORM",opts:["A","E","I","O"],full:"TRANSFORM",hint:"To change completely"},
+    {word:"_BSERVATION",answer:"O",display:"_ BSERVATION",opts:["O","A","I","E"],full:"OBSERVATION",hint:"Watching carefully"},
+    {word:"PSYCH_LOGY",answer:"O",display:"PSYCH _ LOGY",opts:["O","A","E","I"],full:"PSYCHOLOGY",hint:"Study of the mind"},
+  ],
+};
+
+function MissingLetter({ config, onComplete }) {
+  const bank = MISSING_LETTER_DATA[config.difficulty]||MISSING_LETTER_DATA.easy;
+  const [questions] = useState(()=>[...bank].sort(()=>Math.random()-0.5).slice(0,6));
+  const [idx, setIdx] = useState(0);
+  const [picked, setPicked] = useState(null);
+  const [score, setScore] = useState(0);
+  const [done, setDone] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  const q = questions[idx];
+
+  const choose = (opt) => {
+    if(picked) return; setPicked(opt);
+    const correct = opt===q.answer;
+    if(correct) setScore(s=>s+1);
+    setTimeout(()=>{
+      if(idx+1>=questions.length){setDone(true);onComplete&&onComplete({score:score+(correct?1:0),total:questions.length});}
+      else{setIdx(i=>i+1);setPicked(null);setShowHint(false);}
+    },1000);
+  };
+
+  if(done) return React.createElement('div',{style:{padding:24,background:'linear-gradient(135deg,#4ECDC422,#6C63FF22)',borderRadius:16,textAlign:'center'}},
+    React.createElement('div',{style:{fontSize:48}},'🔤'),
+    React.createElement('div',{style:{fontSize:22,fontWeight:700,color:'#fff',marginTop:8}},'Letter Expert!'),
+    React.createElement('div',{style:{color:'#aaa',marginTop:8}},`${score}/${questions.length} correct`)
+  );
+
+  // Show word with blank highlighted
+  const parts = q.display.split('_');
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement('div',{style:{color:'#aaa',fontSize:13,marginBottom:24}},`Word ${idx+1} of ${questions.length} · Score: ${score}`),
+    React.createElement('div',{style:{display:'flex',alignItems:'center',justifyContent:'center',gap:4,marginBottom:8,flexWrap:'wrap'}},
+      React.createElement('span',{style:{fontSize:config.large?36:30,fontWeight:800,color:'#e0e0ff',fontFamily:'monospace',letterSpacing:4}},parts[0]),
+      React.createElement('div',{style:{width:config.large?44:36,height:config.large?52:44,borderRadius:8,border:'3px solid #6C63FF',background:picked?'#6C63FF33':'#1e2235',display:'flex',alignItems:'center',justifyContent:'center',fontSize:config.large?28:22,fontWeight:800,color:'#6C63FF',fontFamily:'monospace',transition:'all 0.2s'}},
+        picked||'_'),
+      React.createElement('span',{style:{fontSize:config.large?36:30,fontWeight:800,color:'#e0e0ff',fontFamily:'monospace',letterSpacing:4}},parts[1])
+    ),
+    picked&&React.createElement('div',{style:{color:picked===q.answer?'#4ECDC4':'#FF6B6B',fontSize:14,fontWeight:700,marginBottom:8,letterSpacing:2}},
+      picked===q.answer?`✓ ${q.full}`:`✗ ${q.full}`),
+    React.createElement('div',{style:{color:'#555',fontSize:12,marginBottom:20}},'Fill in the missing letter'),
+    React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,maxWidth:260,margin:'0 auto 12px'}},
+      ...q.opts.map((opt,i)=>{
+        let bg='#1e2235',border='#2a2f4a',color='#e0e0ff';
+        if(picked){if(opt===q.answer){bg='#4ECDC422';border='#4ECDC4';}else if(opt===picked){bg='#FF6B6B22';border='#FF6B6B';}}
+        return React.createElement('button',{key:i,onClick:()=>choose(opt),
+          style:{padding:'16px',background:bg,border:`2px solid ${border}`,borderRadius:12,color,fontSize:config.large?24:20,cursor:picked?'default':'pointer',fontWeight:800,fontFamily:'monospace',transition:'all 0.2s'}},opt);
+      })
+    ),
+    !picked&&React.createElement('button',{onClick:()=>setShowHint(h=>!h),
+      style:{background:'none',border:'1px solid #333',borderRadius:8,color:'#555',cursor:'pointer',fontSize:12,padding:'4px 12px'}},
+      showHint?`💡 ${q.hint}`:'💡 Hint')
+  );
+}
+
 // ── GAME PLAYER ────────────────────────────────────────────────
-const COMPONENTS = { ColorMatch, WhatsGone, OrientationQuiz, WordScramble, NumberPattern, SimonSays, SpatialRecall, MentalMath, WordAssociation, WhereAmI, WhatSeason, TimelineSort, ClockReading, NewsHeadlines, StoryRecall, DigitSpan, SentenceBuilder, SudokuMini, NBack, SynonymFinder, SpotDifference };
+const COMPONENTS = { ColorMatch, WhatsGone, OrientationQuiz, WordScramble, NumberPattern, SimonSays, SpatialRecall, MentalMath, WordAssociation, WhereAmI, WhatSeason, TimelineSort, ClockReading, NewsHeadlines, StoryRecall, DigitSpan, SentenceBuilder, SudokuMini, NBack, SynonymFinder, SpotDifference, ShapeAnalogy, JigsawPreview, VisualMatrix, CategoryFluency, RhymeTime, MissingLetter };
 
 function GamePlayer({ game, onBack }) {
   const [completed, setCompleted] = useState(false);
@@ -1754,29 +2237,34 @@ function App() {
           React.createElement('p',{style:{color:'#aaa',fontSize:15,marginBottom:4}},'Choose your game:'),
           React.createElement('p',{style:{color:'#555',fontSize:12}},`${(DOMAINS.find(d=>d.id===domain)||{}).icon} ${(DOMAINS.find(d=>d.id===domain)||{}).label} · ${(LEVELS.find(l=>l.id===level)||{}).label}`)
         ),
-        // All levels as game cards
+        // All levels as game cards — include domain2 extras
         React.createElement('div',{style:{display:'flex',flexDirection:'column',gap:12}},
-          ...LEVELS.map(l=>{
+          ...[...LEVELS.map(l=>{
             const g = GAMES[domain]&&GAMES[domain][age]&&GAMES[domain][age][l.id];
             if(!g) return null;
             const lv = LEVELS.find(lx=>lx.id===l.id);
-            const isSelected = l.id===level;
-            return React.createElement('div',{key:l.id,
-              style:{padding:'16px 18px',background:isSelected?'linear-gradient(135deg,#1e2235,#151928)':'#13172a',
-                border:`2px solid ${isSelected?lv.color:'#1e2235'}`,borderRadius:16,transition:'all 0.2s'}},
-              React.createElement('div',{style:{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:10}},
-                React.createElement('div',null,
-                  React.createElement('span',{style:{fontSize:11,fontWeight:700,color:lv.color,background:lv.color+'22',padding:'2px 8px',borderRadius:20,marginRight:8}},l.label.toUpperCase()),
-                  React.createElement('span',{style:{fontWeight:700,color:'#fff',fontSize:15}},g.name)
-                )
+            return {key:l.id,g,lv,label:lv.label};
+          }),
+          ...LEVELS.map(l=>{
+            const d2 = domain+'2';
+            const g = GAMES[d2]&&GAMES[d2][age]&&GAMES[d2][age][l.id];
+            if(!g) return null;
+            const lv = LEVELS.find(lx=>lx.id===l.id);
+            return {key:d2+l.id,g,lv,label:lv.label+' ★'};
+          })].filter(Boolean).map(({key,g,lv,label})=>
+            React.createElement('div',{key,
+              style:{padding:'16px 18px',background:'#13172a',border:`2px solid #1e2235`,borderRadius:16,transition:'all 0.2s'}},
+              React.createElement('div',{style:{display:'flex',alignItems:'center',marginBottom:10}},
+                React.createElement('span',{style:{fontSize:11,fontWeight:700,color:lv.color,background:lv.color+'22',padding:'2px 8px',borderRadius:20,marginRight:8}},label.toUpperCase()),
+                React.createElement('span',{style:{fontWeight:700,color:'#fff',fontSize:15}},g.name)
               ),
               React.createElement('p',{style:{color:'#666',fontSize:12,marginBottom:12}},g.desc),
-              React.createElement('button',{onClick:()=>{setLevel(l.id);setPlaying(g);},
+              React.createElement('button',{onClick:()=>{setLevel(key);setPlaying(g);},
                 style:{width:'100%',padding:'10px',background:`linear-gradient(135deg,${lv.color},${lv.color}aa)`,
                   border:'none',borderRadius:10,color:'#0a0e1a',fontWeight:700,cursor:'pointer',fontSize:14}},
                 '▶ Play This Game')
-            );
-          })
+            )
+          )
         ),
         React.createElement('button',{onClick:()=>setLevel(null),style:{marginTop:14,background:'none',border:'1px solid #2a2f4a',borderRadius:10,color:'#555',cursor:'pointer',fontSize:12,padding:'8px 16px',width:'100%'}},'← Back to Domain')
       )
