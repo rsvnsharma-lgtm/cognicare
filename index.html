@@ -27,6 +27,10 @@ const DOMAINS = [
   { id:"orientation", label:"Orientation", icon:"🧭", color:"#FFB347", desc:"Awareness of time, place & self" },
   { id:"language",    label:"Language",    icon:"💬", color:"#4ECDC4", desc:"Word processing & communication" },
   { id:"logic",       label:"Logic",       icon:"⚙️", color:"#A8E6CF", desc:"Reasoning & problem solving" },
+  { id:"executive",   label:"Executive",   icon:"🎯", color:"#8338EC", desc:"Inhibition, planning & flexibility" },
+  { id:"speed",       label:"Speed",       icon:"⚡", color:"#E8A838", desc:"Processing speed & reaction time" },
+  { id:"visuospatial",label:"Spatial",     icon:"👁️", color:"#0096A0", desc:"Rotation, navigation & space" },
+  { id:"social",      label:"Social",      icon:"🤝", color:"#C2185B", desc:"Emotion & social understanding" },
 ];
 const AGE_GROUPS = [
   { id:"kids",    label:"Kids",    range:"6–12",  icon:"🌟" },
@@ -162,6 +166,95 @@ const GAMES = {
     teens:{  easy:{name:"Shape Analogy",desc:"A is to B as C is to ?",component:"ShapeAnalogy",config:{difficulty:"medium"}},medium:{name:"Visual Matrix",desc:"Find the missing pattern piece",component:"VisualMatrix",config:{difficulty:"medium"}},hard:{name:"Jigsaw",desc:"Memorise and restore the grid",component:"JigsawPreview",config:{studyTime:4}}},
     adults:{ easy:{name:"Shape Analogy",desc:"Emoji-based analogy reasoning",component:"ShapeAnalogy",config:{difficulty:"medium"}},medium:{name:"Visual Matrix",desc:"Complete the pattern matrix",component:"VisualMatrix",config:{difficulty:"hard"}},hard:{name:"Jigsaw",desc:"Fast memorise and restore",component:"JigsawPreview",config:{studyTime:3}}},
     seniors:{easy:{name:"Shape Analogy",desc:"A is to B as C is to ?",component:"ShapeAnalogy",config:{difficulty:"easy",large:true}},medium:{name:"Visual Matrix",desc:"What completes the pattern?",component:"VisualMatrix",config:{difficulty:"easy",large:true}},hard:{name:"Jigsaw",desc:"Memorise and restore the grid",component:"JigsawPreview",config:{studyTime:6,large:true}}},
+
+  executive:{
+    kids:{
+      easy:  { name:"Stroop Test",     desc:"Tap the ink colour, not the word",      component:"StroopTest",   config:{roundSpecs:[{type:'congruent',trials:4,tpq:7,label:'Colour words — congruent'},{type:'congruent',trials:5,tpq:6,label:'Congruent, faster'},{type:'incongruent',trials:4,tpq:8,label:'Incongruent — ignore the word'},{type:'incongruent',trials:5,tpq:7,label:'Incongruent, more trials'},{type:'mixed',trials:4,tpq:6,label:'Mixed block'},{type:'mixed',trials:5,tpq:5,label:'Mixed, faster'},{type:'mixed',trials:6,tpq:4,label:'Mixed, speed round'},{type:'mixed',trials:6,tpq:3,label:'Expert — full mixed'}],large:true} },
+      medium:{ name:"Stop Signal",     desc:"Tap GO — but stop when you see 🛑",     component:"StopSignal",   config:{roundSpecs:[{trials:6,stopRate:0.20,window:1800,label:'20% stop — learn the task'},{trials:6,stopRate:0.20,window:1600,label:'20% stop, steady'},{trials:8,stopRate:0.25,window:1500,label:'25% stop signals'},{trials:8,stopRate:0.25,window:1300,label:'25% stop, faster'},{trials:8,stopRate:0.28,window:1200,label:'28% stop signals'},{trials:10,stopRate:0.30,window:1100,label:'30% stop, 10 trials'},{trials:10,stopRate:0.30,window:1000,label:'30% stop, faster'},{trials:10,stopRate:0.33,window:900,label:'33% stop — challenge'}],large:true} },
+      hard:  { name:"Task Switch",     desc:"Switch rules when the cue changes",      component:"TaskSwitch",   config:{roundSpecs:[{rules:2,switchEvery:1,cueVisible:true,trials:4,label:'2 rules, clear cue'},{rules:2,switchEvery:1,cueVisible:true,trials:5,label:'2 rules, more trials'},{rules:2,switchEvery:1,cueVisible:true,trials:6,label:'2 rules, 6 trials'},{rules:2,switchEvery:1,cueVisible:false,trials:6,label:'2 rules, faded cue'},{rules:2,switchEvery:1,cueVisible:false,trials:7,label:'2 rules, harder'},{rules:3,switchEvery:1,cueVisible:true,trials:6,label:'3 rules, clear cue'},{rules:3,switchEvery:1,cueVisible:true,trials:8,label:'3 rules, more trials'},{rules:3,switchEvery:1,cueVisible:false,trials:8,label:'3 rules, no cue — expert'}],large:true} },
+    },
+    teens:{
+      easy:  { name:"Stroop Test",     desc:"Name the ink colour — ignore the word", component:"StroopTest",   config:{} },
+      medium:{ name:"Stop Signal",     desc:"React fast, but inhibit on stop cue",   component:"StopSignal",   config:{} },
+      hard:  { name:"Task Switch",     desc:"Alternate between two sorting rules",   component:"TaskSwitch",   config:{} },
+    },
+    adults:{
+      easy:  { name:"Stroop Test",     desc:"Classic ink-colour interference task",  component:"StroopTest",   config:{} },
+      medium:{ name:"Stop Signal",     desc:"Go/no-go inhibition challenge",         component:"StopSignal",   config:{} },
+      hard:  { name:"Tower Planner",   desc:"Move discs to goal in fewest moves",    component:"TowerPlanner", config:{} },
+    },
+    seniors:{
+      easy:  { name:"Stroop (easy)",   desc:"Tap the ink colour — large targets",    component:"StroopTest",   config:{roundSpecs:[{type:'congruent',trials:4,tpq:8,label:'Congruent only — learn the task'},{type:'congruent',trials:4,tpq:7,label:'Congruent, gentle'},{type:'congruent',trials:5,tpq:7,label:'Congruent, more trials'},{type:'incongruent',trials:3,tpq:8,label:'Incongruent — take your time'},{type:'incongruent',trials:4,tpq:8,label:'Incongruent, steady pace'},{type:'mixed',trials:4,tpq:7,label:'Mixed block, generous time'},{type:'mixed',trials:5,tpq:6,label:'Mixed, moderate pace'},{type:'mixed',trials:6,tpq:5,label:'Mixed, full round'}],large:true} },
+      medium:{ name:"Stop Signal",     desc:"Tap GO — stop when you see 🛑",         component:"StopSignal",   config:{roundSpecs:[{trials:5,stopRate:0.18,window:2000,label:'18% stop — learn the task'},{trials:5,stopRate:0.20,window:1900,label:'20% stop, gentle'},{trials:6,stopRate:0.20,window:1800,label:'20% stop, more trials'},{trials:6,stopRate:0.22,window:1700,label:'22% stop signals'},{trials:6,stopRate:0.25,window:1600,label:'25% stop signals'},{trials:8,stopRate:0.25,window:1500,label:'25% stop, 8 trials'},{trials:8,stopRate:0.28,window:1400,label:'28% stop'},{trials:8,stopRate:0.30,window:1300,label:'30% stop — challenge'}],large:true} },
+      hard:  { name:"Task Switch",     desc:"Switch between two rules",              component:"TaskSwitch",   config:{roundSpecs:[{rules:2,switchEvery:1,cueVisible:true,trials:4,label:'2 rules, clear cue'},{rules:2,switchEvery:1,cueVisible:true,trials:5,label:'2 rules, more trials'},{rules:2,switchEvery:1,cueVisible:true,trials:6,label:'2 rules, steady'},{rules:2,switchEvery:1,cueVisible:true,trials:7,label:'2 rules, 7 trials'},{rules:2,switchEvery:1,cueVisible:false,trials:5,label:'2 rules, faded cue'},{rules:2,switchEvery:1,cueVisible:false,trials:6,label:'2 rules, no cue'},{rules:3,switchEvery:1,cueVisible:true,trials:6,label:'3 rules, clear cue'},{rules:3,switchEvery:1,cueVisible:true,trials:8,label:'3 rules — expert'}],large:true} },
+    },
+  },
+  speed:{
+    kids:{
+      easy:  { name:"Reaction Tap",    desc:"Tap the star as fast as you can!",      component:"ReactionTap",  config:{roundSpecs:[{window:2500,trials:4,distract:false,label:'2.5s window — learn the task'},{window:2200,trials:4,distract:false,label:'2.2s window'},{window:2000,trials:4,distract:false,label:'2s window'},{window:1800,trials:5,distract:false,label:'1.8s window'},{window:1600,trials:5,distract:false,label:'1.6s window'},{window:1400,trials:5,distract:false,label:'1.4s window'},{window:1200,trials:6,distract:false,label:'1.2s window'},{window:1000,trials:6,distract:false,label:'1s window — fast!'}],large:true} },
+      medium:{ name:"Visual Search",   desc:"Find the odd one out in the grid",      component:"VisualSearch", config:{roundSpecs:[{gridSize:3,similar:false,timeLimit:12,label:'3×3 grid, distinct target'},{gridSize:3,similar:false,timeLimit:10,label:'3×3 grid, faster'},{gridSize:3,similar:false,timeLimit:9,label:'3×3, even faster'},{gridSize:4,similar:false,timeLimit:12,label:'4×4 grid, distinct target'},{gridSize:4,similar:false,timeLimit:10,label:'4×4 grid, faster'},{gridSize:4,similar:false,timeLimit:9,label:'4×4, speed'},{gridSize:4,similar:true,timeLimit:12,label:'4×4, similar items'},{gridSize:4,similar:true,timeLimit:10,label:'4×4 similar — challenge'}],large:true} },
+      hard:  { name:"Reaction Tap",    desc:"Tap fast — watch for distractors!",     component:"ReactionTap",  config:{} },
+    },
+    teens:{
+      easy:  { name:"Reaction Tap",    desc:"Tap the target — beat your time",       component:"ReactionTap",  config:{} },
+      medium:{ name:"Visual Search",   desc:"Find the target in the grid fast",      component:"VisualSearch", config:{} },
+      hard:  { name:"Reaction Tap",    desc:"Fast reactions with distractors",       component:"ReactionTap",  config:{roundSpecs:[{window:1400,trials:5,distract:false,label:'1.4s window'},{window:1200,trials:5,distract:false,label:'1.2s window'},{window:1000,trials:6,distract:false,label:'1s window'},{window:900,trials:6,distract:true,label:'0.9s + distractors'},{window:800,trials:7,distract:true,label:'0.8s + distractors'},{window:700,trials:7,distract:true,label:'0.7s — fast'},{window:650,trials:8,distract:true,label:'0.65s'},{window:600,trials:8,distract:true,label:'0.6s — expert'}]} },
+    },
+    adults:{
+      easy:  { name:"Reaction Tap",    desc:"Tap when the target appears",           component:"ReactionTap",  config:{} },
+      medium:{ name:"Visual Search",   desc:"Scan and find — measure your speed",    component:"VisualSearch", config:{} },
+      hard:  { name:"Reaction Tap",    desc:"Sub-second reactions + distractors",    component:"ReactionTap",  config:{roundSpecs:[{window:1200,trials:5,distract:false,label:'1.2s window'},{window:1000,trials:6,distract:false,label:'1s window'},{window:850,trials:6,distract:true,label:'0.85s + distractors'},{window:750,trials:7,distract:true,label:'0.75s + distractors'},{window:650,trials:7,distract:true,label:'0.65s — speed'},{window:600,trials:8,distract:true,label:'0.6s'},{window:550,trials:8,distract:true,label:'0.55s'},{window:500,trials:8,distract:true,label:'0.5s — expert'}]} },
+    },
+    seniors:{
+      easy:  { name:"Reaction Tap",    desc:"Tap the star — take your time",         component:"ReactionTap",  config:{roundSpecs:[{window:3000,trials:4,distract:false,label:'3s window — gentle pace'},{window:2800,trials:4,distract:false,label:'2.8s window'},{window:2500,trials:4,distract:false,label:'2.5s window'},{window:2200,trials:5,distract:false,label:'2.2s window'},{window:2000,trials:5,distract:false,label:'2s window'},{window:1800,trials:5,distract:false,label:'1.8s window'},{window:1600,trials:6,distract:false,label:'1.6s window'},{window:1400,trials:6,distract:false,label:'1.4s window'}],large:true} },
+      medium:{ name:"Visual Search",   desc:"Find the odd one out in the grid",      component:"VisualSearch", config:{roundSpecs:[{gridSize:3,similar:false,timeLimit:15,label:'3×3 grid, generous time'},{gridSize:3,similar:false,timeLimit:12,label:'3×3, steady'},{gridSize:3,similar:false,timeLimit:10,label:'3×3, moderate'},{gridSize:3,similar:true,timeLimit:14,label:'3×3, similar items'},{gridSize:4,similar:false,timeLimit:15,label:'4×4 grid, distinct'},{gridSize:4,similar:false,timeLimit:12,label:'4×4 grid'},{gridSize:4,similar:false,timeLimit:10,label:'4×4, faster'},{gridSize:4,similar:true,timeLimit:14,label:'4×4 similar — challenge'}],large:true} },
+      hard:  { name:"Reaction Tap",    desc:"Faster reaction challenge",             component:"ReactionTap",  config:{roundSpecs:[{window:2200,trials:5,distract:false,label:'2.2s window'},{window:2000,trials:5,distract:false,label:'2s window'},{window:1800,trials:6,distract:false,label:'1.8s window'},{window:1600,trials:6,distract:false,label:'1.6s window'},{window:1400,trials:6,distract:false,label:'1.4s window'},{window:1200,trials:7,distract:false,label:'1.2s window'},{window:1100,trials:7,distract:true,label:'1.1s + distractors'},{window:1000,trials:8,distract:true,label:'1s + distractors'}],large:true} },
+    },
+  },
+  visuospatial:{
+    kids:{
+      easy:  { name:"Emotion Match",   desc:"Match the face to the feeling",         component:"EmotionMatch", config:{roundSpecs:[{emotions:['happy','sad','angry','scared'],opts:2,label:'4 basic emotions, 2 choices'},{emotions:['happy','sad','angry','scared'],opts:2,label:'4 emotions, pick from 2'},{emotions:['happy','sad','angry','scared'],opts:4,label:'4 emotions, 4 choices'},{emotions:['happy','sad','angry','scared'],opts:4,label:'4 emotions, more rounds'},{emotions:['happy','sad','angry','scared','surprised','disgusted'],opts:4,label:'6 emotions'},{emotions:['happy','sad','angry','scared','surprised','disgusted'],opts:4,label:'6 emotions, more Qs'},{emotions:['happy','sad','angry','scared','surprised','disgusted','proud','embarrassed'],opts:4,label:'8 emotions'},{emotions:['happy','sad','angry','scared','surprised','disgusted','proud','embarrassed'],opts:4,label:'8 emotions — expert'}],large:true} },
+      medium:{ name:"Mental Rotation", desc:"Which shape matches after rotating?",   component:"MentalRotation",config:{roundSpecs:[{type:'2d',rotation:90,label:'2D shapes, 90°'},{type:'2d',rotation:90,label:'2D shapes, another 90°'},{type:'2d',rotation:180,label:'2D shapes, 180°'},{type:'2d',rotation:'any',label:'2D, any angle'},{type:'emoji',rotation:90,label:'Emoji objects'},{type:'emoji',rotation:180,label:'Emoji, 180°'},{type:'emoji',rotation:'any',label:'Emoji, any angle'},{type:'emoji',rotation:'any',label:'Emoji — expert'}],large:true} },
+      hard:  { name:"Map Navigator",   desc:"Follow directions — where do you end up?",component:"MapNavigator",config:{roundSpecs:[{steps:2,gridSize:4,label:'2 steps on 4×4 grid'},{steps:2,gridSize:4,label:'2 steps, another grid'},{steps:3,gridSize:4,label:'3 steps on 4×4 grid'},{steps:3,gridSize:4,label:'3 steps, different start'},{steps:3,gridSize:5,label:'3 steps on 5×5 grid'},{steps:4,gridSize:5,label:'4 steps on 5×5 grid'},{steps:4,gridSize:5,label:'4 steps, different grid'},{steps:5,gridSize:5,label:'5 steps — challenge'}],large:true} },
+    },
+    teens:{
+      easy:  { name:"Mental Rotation", desc:"Spot the matching rotated shape",       component:"MentalRotation",config:{} },
+      medium:{ name:"Map Navigator",   desc:"Navigate the grid with directions",     component:"MapNavigator", config:{} },
+      hard:  { name:"Mental Rotation", desc:"3D rotation challenge",                 component:"MentalRotation",config:{roundSpecs:[{type:'emoji',rotation:90,label:'Emoji, 90°'},{type:'emoji',rotation:180,label:'Emoji, 180°'},{type:'emoji',rotation:'any',label:'Emoji, any angle'},{type:'2d',rotation:90,label:'2D shapes, 90°'},{type:'2d',rotation:180,label:'2D shapes, 180°'},{type:'2d',rotation:'any',label:'2D, any angle'},{type:'2d',rotation:'any',label:'2D speed round'},{type:'2d',rotation:'any',label:'Expert rotation'}]} },
+    },
+    adults:{
+      easy:  { name:"Mental Rotation", desc:"Match shapes across rotations",         component:"MentalRotation",config:{} },
+      medium:{ name:"Map Navigator",   desc:"Multi-step grid navigation",            component:"MapNavigator", config:{} },
+      hard:  { name:"Mental Rotation", desc:"Expert spatial reasoning",              component:"MentalRotation",config:{roundSpecs:[{type:'2d',rotation:'any',label:'2D, any angle'},{type:'2d',rotation:'any',label:'2D, speed'},{type:'emoji',rotation:'any',label:'Emoji, any angle'},{type:'emoji',rotation:'any',label:'Emoji speed'},{type:'2d',rotation:'any',label:'Mixed 2D'},{type:'emoji',rotation:'any',label:'Mixed emoji'},{type:'2d',rotation:'any',label:'Expert 2D'},{type:'emoji',rotation:'any',label:'Expert — max speed'}]} },
+    },
+    seniors:{
+      easy:  { name:"Mental Rotation", desc:"Match the rotated shape — take your time",component:"MentalRotation",config:{roundSpecs:[{type:'2d',rotation:90,label:'2D shapes, 90° — gentle'},{type:'2d',rotation:90,label:'2D shapes, another set'},{type:'2d',rotation:180,label:'2D shapes, 180°'},{type:'2d',rotation:180,label:'2D, more practice'},{type:'emoji',rotation:90,label:'Emoji objects, 90°'},{type:'emoji',rotation:90,label:'Emoji, another set'},{type:'emoji',rotation:180,label:'Emoji, 180°'},{type:'emoji',rotation:'any',label:'Emoji, any angle'}],large:true} },
+      medium:{ name:"Map Navigator",   desc:"Follow directions on a simple map",     component:"MapNavigator", config:{roundSpecs:[{steps:2,gridSize:4,label:'2 steps — gentle'},{steps:2,gridSize:4,label:'2 steps, different start'},{steps:3,gridSize:4,label:'3 steps on 4×4'},{steps:3,gridSize:4,label:'3 steps, another grid'},{steps:3,gridSize:5,label:'3 steps on 5×5'},{steps:3,gridSize:5,label:'3 steps, different start'},{steps:4,gridSize:5,label:'4 steps'},{steps:4,gridSize:5,label:'4 steps — challenge'}],large:true} },
+      hard:  { name:"Mental Rotation", desc:"Spatial challenge — take your time",    component:"MentalRotation",config:{roundSpecs:[{type:'emoji',rotation:90,label:'Emoji, 90°'},{type:'emoji',rotation:90,label:'Emoji, another 90°'},{type:'emoji',rotation:180,label:'Emoji, 180°'},{type:'emoji',rotation:180,label:'Emoji, more 180°'},{type:'2d',rotation:90,label:'2D shapes, 90°'},{type:'2d',rotation:90,label:'2D, another set'},{type:'2d',rotation:180,label:'2D shapes, 180°'},{type:'2d',rotation:'any',label:'2D, any angle'}],large:true} },
+    },
+  },
+  social:{
+    kids:{
+      easy:  { name:"Emotion Match",   desc:"Match the emoji face to the feeling",   component:"EmotionMatch", config:{roundSpecs:[{emotions:['happy','sad','angry','scared'],opts:2,label:'4 basic emotions, 2 choices'},{emotions:['happy','sad','angry','scared'],opts:2,label:'4 emotions, 2 choices'},{emotions:['happy','sad','angry','scared'],opts:4,label:'4 emotions, 4 choices'},{emotions:['happy','sad','angry','scared'],opts:4,label:'4 emotions — build speed'},{emotions:['happy','sad','angry','scared','surprised','disgusted'],opts:4,label:'6 emotions'},{emotions:['happy','sad','angry','scared','surprised','disgusted'],opts:4,label:'6 emotions, more Qs'},{emotions:['happy','sad','angry','scared','surprised','disgusted','proud','embarrassed'],opts:4,label:'8 emotions'},{emotions:['happy','sad','angry','scared','surprised','disgusted','proud','embarrassed'],opts:4,label:'8 emotions — expert'}],large:true} },
+      medium:{ name:"Read the Room",   desc:"How does this person feel?",            component:"ReadTheRoom",  config:{large:true} },
+      hard:  { name:"Eyes Say",        desc:"What do the eyes tell you?",            component:"EyesSay",      config:{large:true} },
+    },
+    teens:{
+      easy:  { name:"Emotion Match",   desc:"Identify facial expressions",           component:"EmotionMatch", config:{} },
+      medium:{ name:"Read the Room",   desc:"What's this person really feeling?",    component:"ReadTheRoom",  config:{} },
+      hard:  { name:"Eyes Say",        desc:"Read emotions from eyes alone",         component:"EyesSay",      config:{} },
+    },
+    adults:{
+      easy:  { name:"Emotion Match",   desc:"Facial expression recognition",         component:"EmotionMatch", config:{} },
+      medium:{ name:"Read the Room",   desc:"Infer emotions from social scenarios",  component:"ReadTheRoom",  config:{} },
+      hard:  { name:"Eyes Say",        desc:"Subtle emotion reading from eyes only", component:"EyesSay",      config:{} },
+    },
+    seniors:{
+      easy:  { name:"Emotion Match",   desc:"Match the face — large, clear emojis",  component:"EmotionMatch", config:{roundSpecs:[{emotions:['happy','sad','angry','scared'],opts:2,label:'4 basic emotions, 2 choices'},{emotions:['happy','sad','angry','scared'],opts:2,label:'4 emotions, gentle'},{emotions:['happy','sad','angry','scared'],opts:4,label:'4 emotions, 4 choices'},{emotions:['happy','sad','angry','scared'],opts:4,label:'4 emotions — steady'},{emotions:['happy','sad','angry','scared','surprised','disgusted'],opts:4,label:'6 emotions'},{emotions:['happy','sad','angry','scared','surprised','disgusted'],opts:4,label:'6 emotions, more Qs'},{emotions:['happy','sad','angry','scared','surprised','disgusted','proud','embarrassed'],opts:4,label:'8 emotions'},{emotions:['happy','sad','angry','scared','surprised','disgusted','proud','embarrassed'],opts:4,label:'8 emotions'}],large:true} },
+      medium:{ name:"Read the Room",   desc:"How does this person feel? Large text", component:"ReadTheRoom",  config:{large:true} },
+      hard:  { name:"Eyes Say",        desc:"What do the eyes show?",                component:"EyesSay",      config:{large:true} },
+    },
+  },
   },
 };
 
@@ -2100,8 +2193,1126 @@ function CategoryFluency({ config, onComplete }) {
 }
 
 
+// ══════════════════════════════════════════════════════════════════════
+// 🎯 EXECUTIVE FUNCTION — StroopTest, StopSignal, TaskSwitch, TowerPlanner
+// ⚡ PROCESSING SPEED  — ReactionTap, VisualSearch
+// 👁️ VISUOSPATIAL      — MentalRotation, MapNavigator
+// 🤝 SOCIAL COGNITION  — EmotionMatch, ReadTheRoom, EyesSay
+// ══════════════════════════════════════════════════════════════════════
+
+// ── STROOP TEST ────────────────────────────────────────────────────────
+function StroopTest({ config, onComplete }) {
+  const ROUND_SPECS = config.roundSpecs || [
+    { type:'congruent',   trials:4, tpq:6, label:'Colour words — congruent'       },
+    { type:'congruent',   trials:5, tpq:5, label:'Congruent, faster pace'         },
+    { type:'incongruent', trials:4, tpq:7, label:'Incongruent — ignore the word'  },
+    { type:'incongruent', trials:5, tpq:6, label:'Incongruent, more trials'       },
+    { type:'mixed',       trials:5, tpq:5, label:'Mixed block'                    },
+    { type:'mixed',       trials:6, tpq:4, label:'Mixed, faster'                  },
+    { type:'mixed',       trials:7, tpq:3, label:'Mixed, speed round'             },
+    { type:'mixed',       trials:8, tpq:3, label:'Expert — full mixed'            },
+  ];
+  const COLS = [
+    { name:'RED',    hex:'#FF6B6B' },
+    { name:'BLUE',   hex:'#6C63FF' },
+    { name:'GREEN',  hex:'#4ECDC4' },
+    { name:'YELLOW', hex:'#FFB347' },
+  ];
+  const { currentRound, roundIdx, score, phase, completeRound, renderTransition, renderDone } =
+    useProgression(ROUND_SPECS, onComplete);
+
+  const makeTrials = (r) => Array.from({ length: r.trials }, () => {
+    const wi = Math.floor(Math.random() * COLS.length);
+    let ii;
+    if (r.type === 'congruent') ii = wi;
+    else if (r.type === 'incongruent') { do { ii = Math.floor(Math.random()*COLS.length); } while(ii===wi); }
+    else ii = Math.floor(Math.random() * COLS.length);
+    return { word: COLS[wi].name, inkIdx: ii, answer: COLS[ii].name };
+  });
+
+  const [trials,   setTrials]   = useState(() => makeTrials(currentRound));
+  const [ti,       setTi]       = useState(0);
+  const [feedback, setFeedback] = useState(null);
+  const [correct,  setCorrect]  = useState(0);
+  const [timeLeft, setTimeLeft] = useState(currentRound.tpq);
+
+  useEffect(() => {
+    setTrials(makeTrials(currentRound));
+    setTi(0); setFeedback(null); setCorrect(0); setTimeLeft(currentRound.tpq);
+  }, [roundIdx]);
+
+  useEffect(() => {
+    if (feedback !== null) return;
+    if (timeLeft <= 0) { pick(null); return; }
+    const t = setTimeout(() => setTimeLeft(s => s-1), 1000);
+    return () => clearTimeout(t);
+  }, [timeLeft, feedback]);
+
+  const pick = (ans) => {
+    if (feedback !== null) return;
+    const tr = trials[ti];
+    const ok = ans === tr.answer;
+    setFeedback(ok ? 'correct' : 'wrong');
+    const nc = correct + (ok ? 1 : 0);
+    setTimeout(() => {
+      if (ti+1 >= trials.length) completeRound(nc, trials.length);
+      else { setTi(i=>i+1); setFeedback(null); setTimeLeft(currentRound.tpq); setCorrect(nc); }
+    }, 700);
+  };
+
+  if (phase==='transition') return renderTransition();
+  if (phase==='done')       return renderDone('🎨','Stroop Complete!');
+
+  const tr = trials[ti];
+  const inkHex = COLS[tr.inkIdx].hex;
+  const tcol = timeLeft<=2?'#FF6B6B':timeLeft<=3?'#FFB347':'#4ECDC4';
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement(RoundHeader,{roundIdx,totalRounds:ROUND_SPECS.length,label:currentRound.label,score,color:'#8338EC'}),
+    React.createElement('div',{style:{display:'flex',justifyContent:'space-between',marginBottom:8,padding:'0 4px'}},
+      React.createElement('span',{style:{color:'#555',fontSize:13}},`Trial ${ti+1}/${trials.length}`),
+      React.createElement('span',{style:{color:tcol,fontWeight:700,fontSize:15}},`${timeLeft}s`)
+    ),
+    React.createElement('div',{style:{color:'#888',fontSize:12,marginBottom:14,fontStyle:'italic'}},
+      'Tap the INK COLOUR — ignore what the word says'),
+    React.createElement('div',{style:{
+      fontSize:config.large?52:46,fontWeight:900,color:inkHex,
+      padding:'22px 16px',background:'#1e2235',
+      border:`3px solid ${feedback==='correct'?'#4ECDC4':feedback==='wrong'?'#FF6B6B':inkHex+'55'}`,
+      borderRadius:18,marginBottom:20,letterSpacing:4,transition:'border-color 0.2s'
+    }},tr.word),
+    React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,maxWidth:320,margin:'0 auto'}},
+      ...COLS.map((c,i)=>React.createElement('button',{key:i,onClick:()=>feedback===null&&pick(c.name),
+        style:{padding:'14px',borderRadius:14,border:`3px solid ${c.hex}44`,background:'#1e2235',
+          cursor:feedback!==null?'default':'pointer',transition:'all 0.15s'}},
+        React.createElement('div',{style:{width:'100%',height:config.large?28:22,borderRadius:6,background:c.hex}})
+      ))
+    ),
+    feedback&&React.createElement('div',{style:{marginTop:10,color:feedback==='correct'?'#4ECDC4':'#FF6B6B',fontWeight:700,fontSize:14}},
+      feedback==='correct'?'✓ Correct!':'✗ It was '+tr.answer)
+  );
+}
+
+// ── STOP SIGNAL ────────────────────────────────────────────────────────
+function StopSignal({ config, onComplete }) {
+  const ROUND_SPECS = config.roundSpecs || [
+    { trials:8,  stopRate:0.20, window:1500, label:'20% stop — learn the task'   },
+    { trials:8,  stopRate:0.25, window:1300, label:'25% stop signals'            },
+    { trials:10, stopRate:0.25, window:1200, label:'25% stop, more trials'       },
+    { trials:10, stopRate:0.30, window:1100, label:'30% stop signals'            },
+    { trials:10, stopRate:0.30, window:1000, label:'30% stop, faster window'     },
+    { trials:12, stopRate:0.33, window:950,  label:'33% stop, 12 trials'         },
+    { trials:12, stopRate:0.35, window:900,  label:'35% stop signals'            },
+    { trials:14, stopRate:0.40, window:800,  label:'40% stop — expert'           },
+  ];
+  const SHAPES = ['⭐','🔵','🟦','🔶','🟢'];
+  const { currentRound, roundIdx, score, phase, completeRound, renderTransition, renderDone } =
+    useProgression(ROUND_SPECS, onComplete);
+
+  const [trialList, setTrialList] = useState(() =>
+    Array.from({length:currentRound.trials},()=>({shape:SHAPES[Math.floor(Math.random()*SHAPES.length)],isStop:Math.random()<currentRound.stopRate}))
+  );
+  const [ti,       setTi]       = useState(0);
+  const [phase2,   setPhase2]   = useState('waiting'); // waiting|go|stopped|result
+  const [showStop, setShowStop] = useState(false);
+  const [tapped,   setTapped]   = useState(false);
+  const [result,   setResult]   = useState(null); // correct|wrong
+  const [correct,  setCorrect]  = useState(0);
+  const correctRef = useRef(0);
+  const timerRef   = useRef(null);
+  const tappedRef  = useRef(false);
+
+  const runTrial = (list, idx) => {
+    if (idx >= list.length) {
+      completeRound(correctRef.current, list.length);
+      return;
+    }
+    tappedRef.current = false;
+    setTapped(false); setResult(null); setShowStop(false); setPhase2('waiting');
+    const isi = 400 + Math.random()*300;
+    timerRef.current = setTimeout(() => {
+      setPhase2('go');
+      const tr = list[idx];
+      let stopTimer;
+      if (tr.isStop) stopTimer = setTimeout(() => setShowStop(true), 200+Math.random()*200);
+      timerRef.current = setTimeout(() => {
+        const didTap  = tappedRef.current;
+        const isStop  = tr.isStop;
+        const ok = (didTap && !isStop) || (!didTap && isStop);
+        setResult(ok?'correct':'wrong');
+        setPhase2('result');
+        if (ok) { correctRef.current += 1; setCorrect(c=>c+1); }
+        timerRef.current = setTimeout(() => runTrial(list, idx+1), 700);
+      }, currentRound.window);
+    }, isi);
+  };
+
+  useEffect(() => {
+    const list = Array.from({length:currentRound.trials},()=>({
+      shape:SHAPES[Math.floor(Math.random()*SHAPES.length)],
+      isStop:Math.random()<currentRound.stopRate
+    }));
+    correctRef.current = 0;
+    setTrialList(list); setTi(0); setCorrect(0); setResult(null);
+    setPhase2('waiting'); setShowStop(false); setTapped(false);
+    runTrial(list, 0);
+    return () => { if(timerRef.current) clearTimeout(timerRef.current); };
+  }, [roundIdx]);
+
+  const handleTap = () => {
+    if (phase2!=='go') return;
+    tappedRef.current = true;
+    setTapped(true);
+  };
+
+  if (phase==='transition') return renderTransition();
+  if (phase==='done')       return renderDone('🛑','Stop Signal Complete!');
+
+  const tr = trialList[ti] || trialList[0];
+  const isGo = phase2==='go'&&!showStop;
+  const isStopped = phase2==='go'&&showStop;
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement(RoundHeader,{roundIdx,totalRounds:ROUND_SPECS.length,label:currentRound.label,score,color:'#D94F4F'}),
+    React.createElement('div',{style:{color:'#555',fontSize:12,marginBottom:4}},'Tap GO shapes — but HOLD when you see 🛑'),
+    React.createElement('div',{style:{color:'#555',fontSize:12,marginBottom:16}},`Trial — Hits: ${correct}`),
+    React.createElement('div',{
+      onClick:handleTap,
+      style:{
+        width:140,height:140,borderRadius:'50%',margin:'0 auto 20px',
+        display:'flex',alignItems:'center',justifyContent:'center',
+        fontSize:phase2==='waiting'?0:isStopped?52:config.large?64:56,
+        background:phase2==='waiting'?'#111':isStopped?'#FF6B6B22':result==='correct'?'#4ECDC422':result==='wrong'?'#FF6B6B22':'#6C63FF22',
+        border:`4px solid ${phase2==='waiting'?'#222':isStopped?'#FF6B6B':result==='correct'?'#4ECDC4':result==='wrong'?'#FF6B6B':'#6C63FF'}`,
+        cursor:phase2==='go'?'pointer':'default',transition:'all 0.15s',
+        userSelect:'none'
+      }
+    }, phase2==='waiting'?'':isStopped?'🛑':tr.shape),
+    phase2==='waiting'&&React.createElement('div',{style:{color:'#444',fontSize:14}},'Get ready...'),
+    isGo&&!tapped&&React.createElement('div',{style:{color:'#6C63FF',fontWeight:700,fontSize:15}},'TAP!'),
+    isGo&&tapped&&React.createElement('div',{style:{color:'#4ECDC4',fontWeight:700,fontSize:15}},'✓ Tapped'),
+    isStopped&&React.createElement('div',{style:{color:'#FF6B6B',fontWeight:700,fontSize:15}},'🛑 STOP!'),
+    result&&React.createElement('div',{style:{color:result==='correct'?'#4ECDC4':'#FF6B6B',fontWeight:700,fontSize:13,marginTop:4}},
+      result==='correct'?'✓':'✗')
+  );
+}
+
+// ── TASK SWITCH ────────────────────────────────────────────────────────
+function TaskSwitch({ config, onComplete }) {
+  const ROUND_SPECS = config.roundSpecs || [
+    { rules:2, switchEvery:1, cueVisible:true,  trials:6,  label:'2 rules, clear cue'      },
+    { rules:2, switchEvery:1, cueVisible:true,  trials:8,  label:'2 rules, more trials'    },
+    { rules:2, switchEvery:1, cueVisible:true,  trials:10, label:'2 rules, 10 trials'      },
+    { rules:2, switchEvery:1, cueVisible:false, trials:8,  label:'2 rules, faded cue'      },
+    { rules:2, switchEvery:1, cueVisible:false, trials:10, label:'2 rules, no cue'         },
+    { rules:3, switchEvery:1, cueVisible:true,  trials:9,  label:'3 rules, clear cue'      },
+    { rules:3, switchEvery:1, cueVisible:true,  trials:12, label:'3 rules, more trials'    },
+    { rules:3, switchEvery:1, cueVisible:false, trials:12, label:'3 rules, no cue — expert'},
+  ];
+
+  const RULE_SETS = [
+    { name:'Is it FOOD?',    items:[
+        {emoji:'🍎',isFood:true},{emoji:'🐶',isFood:false},{emoji:'🍕',isFood:true},
+        {emoji:'🚗',isFood:false},{emoji:'🥕',isFood:true},{emoji:'✏️',isFood:false},
+        {emoji:'🍦',isFood:true},{emoji:'🏠',isFood:false},{emoji:'🍓',isFood:true},{emoji:'⚽',isFood:false},
+      ], yes:'Food', no:'Not Food' },
+    { name:'Is it ALIVE?',   items:[
+        {emoji:'🐱',isAlive:true},{emoji:'🪨',isAlive:false},{emoji:'🌸',isAlive:true},
+        {emoji:'🪑',isAlive:false},{emoji:'🐠',isAlive:true},{emoji:'💡',isAlive:false},
+        {emoji:'🌳',isAlive:true},{emoji:'🔑',isAlive:false},{emoji:'🦋',isAlive:true},{emoji:'🎸',isAlive:false},
+      ], yes:'Alive', no:'Not Alive' },
+    { name:'Is it BIG?',     items:[
+        {emoji:'🐘',isBig:true},{emoji:'🐜',isBig:false},{emoji:'🏔️',isBig:true},
+        {emoji:'🍀',isBig:false},{emoji:'🚢',isBig:true},{emoji:'🐞',isBig:false},
+        {emoji:'🌏',isBig:true},{emoji:'🐛',isBig:false},{emoji:'🏢',isBig:true},{emoji:'🐁',isBig:false},
+      ], yes:'Big', no:'Small' },
+  ];
+
+  const { currentRound, roundIdx, score, phase, completeRound, renderTransition, renderDone } =
+    useProgression(ROUND_SPECS, onComplete);
+
+  const makeSeq = (r) => {
+    const rules = RULE_SETS.slice(0, r.rules);
+    return Array.from({length:r.trials}, (_, i) => {
+      const ruleIdx = i % r.rules;
+      const rule = rules[ruleIdx];
+      const item = rule.items[Math.floor(Math.random()*rule.items.length)];
+      const propKey = Object.keys(item).find(k=>k!=='emoji');
+      return { ruleIdx, ruleName:rule.name, emoji:item.emoji, answer:item[propKey]?rule.yes:rule.no, yes:rule.yes, no:rule.no };
+    });
+  };
+
+  const [seq,      setSeq]      = useState(() => makeSeq(currentRound));
+  const [ti,       setTi]       = useState(0);
+  const [feedback, setFeedback] = useState(null);
+  const [correct,  setCorrect]  = useState(0);
+
+  useEffect(() => {
+    setSeq(makeSeq(currentRound)); setTi(0); setFeedback(null); setCorrect(0);
+  }, [roundIdx]);
+
+  const pick = (ans) => {
+    if (feedback) return;
+    const tr = seq[ti];
+    const ok = ans === tr.answer;
+    setFeedback(ok?'correct':'wrong');
+    const nc = correct+(ok?1:0);
+    setTimeout(() => {
+      if (ti+1>=seq.length) completeRound(nc, seq.length);
+      else { setTi(i=>i+1); setFeedback(null); setCorrect(nc); }
+    }, 800);
+  };
+
+  if (phase==='transition') return renderTransition();
+  if (phase==='done')       return renderDone('🔄','Task Switch Complete!');
+
+  const tr = seq[ti];
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement(RoundHeader,{roundIdx,totalRounds:ROUND_SPECS.length,label:currentRound.label,score,color:'#8338EC'}),
+    React.createElement('div',{style:{marginBottom:14}},
+      currentRound.cueVisible
+        ? React.createElement('div',{style:{display:'inline-block',padding:'6px 18px',background:'#8338EC22',
+            border:'2px solid #8338EC44',borderRadius:20,color:'#9b6bff',fontWeight:700,fontSize:13}},
+            `Rule: ${tr.ruleName}`)
+        : React.createElement('div',{style:{color:'#333',fontSize:13,fontStyle:'italic'}},'Apply the correct rule')
+    ),
+    React.createElement('div',{style:{
+      fontSize:config.large?80:68,margin:'12px auto 20px',lineHeight:1,
+      background:'#1e2235',border:'2px solid #2a2f4a',borderRadius:20,
+      width:120,height:120,display:'flex',alignItems:'center',justifyContent:'center'
+    }},tr.emoji),
+    React.createElement('div',{style:{display:'flex',gap:12,justifyContent:'center',maxWidth:320,margin:'0 auto'}},
+      [tr.yes,tr.no].map((opt,i)=>{
+        let bg='#1e2235',border='#2a2f4a',color='#e0e0ff';
+        if(feedback){if(opt===tr.answer){bg='#4ECDC422';border='#4ECDC4';}else if(opt!==tr.answer&&feedback==='wrong'&&i===([tr.yes,tr.no].indexOf(opt))){bg='#FF6B6B22';border='#FF6B6B';}}
+        return React.createElement('button',{key:i,onClick:()=>pick(opt),
+          style:{flex:1,padding:'15px 8px',background:bg,border:`2px solid ${border}`,
+            borderRadius:14,color,fontSize:config.large?16:14,cursor:feedback?'default':'pointer',
+            fontWeight:700,transition:'all 0.2s'}},opt);
+      })
+    ),
+    React.createElement('div',{style:{marginTop:10,color:'#444',fontSize:11}},`Trial ${ti+1} of ${seq.length}`)
+  );
+}
+
+// ── TOWER PLANNER ──────────────────────────────────────────────────────
+function TowerPlanner({ config, onComplete }) {
+  const ROUND_SPECS = config.roundSpecs || [
+    { discs:2, minMoves:1, label:'2 discs — 1 move'       },
+    { discs:2, minMoves:2, label:'2 discs — 2 moves'      },
+    { discs:3, minMoves:3, label:'3 discs — 3 moves'      },
+    { discs:3, minMoves:5, label:'3 discs — 5 moves'      },
+    { discs:3, minMoves:7, label:'3 discs — 7 moves'      },
+    { discs:4, minMoves:5, label:'4 discs — 5 moves'      },
+    { discs:4, minMoves:9, label:'4 discs — 9 moves'      },
+    { discs:4, minMoves:15,label:'4 discs — full tower'   },
+  ];
+  const DISC_COLORS = ['#FF6B6B','#FFB347','#4ECDC4','#6C63FF'];
+  const { currentRound, roundIdx, score, phase, completeRound, renderTransition, renderDone } =
+    useProgression(ROUND_SPECS, onComplete);
+
+  const makeInitial = (r) => {
+    const d = r.discs;
+    // Start: all discs on peg 0 (largest at bottom)
+    // Goal: all on peg 2
+    return [[...Array(d).keys()].reverse(), [], []]; // disc 0=smallest
+  };
+  const [pegs,   setPegs]   = useState(() => makeInitial(currentRound));
+  const [goal,   setGoal]   = useState([[],[],[...Array(currentRound.discs).keys()].reverse()]);
+  const [sel,    setSel]    = useState(null); // selected peg index
+  const [moves,  setMoves]  = useState(0);
+  const [solved, setSolved] = useState(false);
+  const [invalid,setInvalid]= useState(false);
+  const minMoves = currentRound.minMoves;
+
+  useEffect(() => {
+    const d = currentRound.discs;
+    setPegs([[...Array(d).keys()].reverse(),[],[]]);
+    setGoal([[],[],[...Array(d).keys()].reverse()]);
+    setSel(null); setMoves(0); setSolved(false); setInvalid(false);
+  }, [roundIdx]);
+
+  const tapPeg = (pi) => {
+    if (solved) return;
+    setInvalid(false);
+    if (sel === null) {
+      if (pegs[pi].length === 0) return;
+      setSel(pi);
+    } else {
+      if (sel === pi) { setSel(null); return; }
+      const top = pegs[sel][pegs[sel].length-1];
+      const dest = pegs[pi];
+      if (dest.length > 0 && dest[dest.length-1] < top) {
+        setInvalid(true); setSel(null);
+        setTimeout(() => setInvalid(false), 600);
+        return;
+      }
+      const np = pegs.map(p=>[...p]);
+      np[pi].push(np[sel].pop());
+      setPegs(np); setSel(null);
+      const nm = moves+1; setMoves(nm);
+      const goalPeg = np[2];
+      if (goalPeg.length === currentRound.discs) {
+        setSolved(true);
+        const perfect = nm <= minMoves;
+        setTimeout(() => completeRound(perfect?1:nm<=minMoves*2?1:0, 1), 700);
+      }
+    }
+  };
+
+  if (phase==='transition') return renderTransition();
+  if (phase==='done')       return renderDone('🗼','Tower Planner Complete!');
+
+  const PEG_W = 90;
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement(RoundHeader,{roundIdx,totalRounds:ROUND_SPECS.length,label:currentRound.label,score,color:'#8338EC'}),
+    React.createElement('div',{style:{display:'flex',justifyContent:'space-between',marginBottom:8,padding:'0 4px'}},
+      React.createElement('span',{style:{color:'#aaa',fontSize:13}},`Moves: ${moves}`),
+      React.createElement('span',{style:{color:'#555',fontSize:13}},`Min: ${minMoves}`)
+    ),
+    React.createElement('div',{style:{color:sel!==null?'#FFB347':'#555',fontSize:13,marginBottom:10,fontWeight:sel!==null?700:400}},
+      solved?'🎉 Solved!':sel!==null?`Peg ${sel+1} selected — tap destination`:
+      'Tap a peg to pick up, tap again to place'),
+    invalid&&React.createElement('div',{style:{color:'#FF6B6B',fontWeight:700,fontSize:13,marginBottom:6}},'⚠ Larger disc can\'t go on smaller'),
+    // Target state indicator
+    React.createElement('div',{style:{color:'#444',fontSize:11,marginBottom:6}},'Goal: move all discs to Peg 3'),
+    // Tower display
+    React.createElement('div',{style:{display:'flex',gap:8,justifyContent:'center',alignItems:'flex-end',marginBottom:12}},
+      pegs.map((peg,pi)=>{
+        const isSelected = sel===pi;
+        const maxDiscs = currentRound.discs;
+        return React.createElement('div',{key:pi,onClick:()=>tapPeg(pi),
+          style:{width:PEG_W,cursor:'pointer',display:'flex',flexDirection:'column',alignItems:'center',
+            paddingBottom:4,background:isSelected?'#8338EC11':'transparent',
+            border:`2px solid ${isSelected?'#8338EC':'transparent'}`,borderRadius:12,padding:'8px 4px 4px',
+            transition:'all 0.15s'}},
+          // Discs (render from bottom, leave empty slots at top)
+          ...Array.from({length:maxDiscs},(_,slot)=>{
+            const discIdx = peg[slot]; // may be undefined
+            const w = discIdx!==undefined ? 20 + discIdx*(config.large?14:11) : 4;
+            return React.createElement('div',{key:slot,style:{
+              width:discIdx!==undefined?w:4,height:discIdx!==undefined?config.large?26:20:config.large?26:20,
+              borderRadius:discIdx!==undefined?6:0,
+              background:discIdx!==undefined?DISC_COLORS[discIdx%DISC_COLORS.length]:'#2a2f4a',
+              border:discIdx!==undefined?'2px solid rgba(255,255,255,0.2)':'none',
+              marginBottom:2,transition:'all 0.2s'
+            }});
+          }).reverse(),
+          // Peg label
+          React.createElement('div',{style:{color:isSelected?'#8338EC':'#555',fontSize:11,fontWeight:700,marginTop:4}},`P${pi+1}`)
+        );
+      })
+    ),
+    solved&&React.createElement('div',{style:{padding:'10px',background:'#4ECDC422',borderRadius:10,
+      color:'#4ECDC4',fontWeight:700,fontSize:14}},
+      `Solved in ${moves} moves${moves<=minMoves?' — Perfect! 🏆':moves<=minMoves*2?' — Great!':' — Done!'}`)
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// ⚡ PROCESSING SPEED
+// ══════════════════════════════════════════════════════════════════════
+
+// ── REACTION TAP ───────────────────────────────────────────────────────
+function ReactionTap({ config, onComplete }) {
+  const ROUND_SPECS = config.roundSpecs || [
+    { window:2200, trials:4, distract:false, label:'2.2s window — learn the task'  },
+    { window:2000, trials:5, distract:false, label:'2s window'                     },
+    { window:1700, trials:5, distract:false, label:'1.7s window'                   },
+    { window:1500, trials:6, distract:false, label:'1.5s window'                   },
+    { window:1200, trials:6, distract:true,  label:'1.2s + distractors'            },
+    { window:1000, trials:7, distract:true,  label:'1s window + distractors'       },
+    { window: 800, trials:7, distract:true,  label:'0.8s — speed round'            },
+    { window: 650, trials:8, distract:true,  label:'0.65s — expert'                },
+  ];
+  const { currentRound, roundIdx, score, phase, completeRound, renderTransition, renderDone } =
+    useProgression(ROUND_SPECS, onComplete);
+
+  const [trialPhase, setTrialPhase] = useState('isi'); // isi|target|distractor|hit|miss|too_early
+  const [ti,         setTi]         = useState(0);
+  const [rt,         setRt]         = useState(null); // reaction time ms
+  const [rtList,     setRtList]     = useState([]);
+  const [correct,    setCorrect]    = useState(0);
+  const timerRef  = useRef(null);
+  const startRef  = useRef(null);
+  const correctRef= useRef(0);
+  const tiRef     = useRef(0);
+  const TOTAL     = currentRound.trials;
+
+  const runTrial = (idx) => {
+    tiRef.current = idx;
+    if (idx >= TOTAL) {
+      completeRound(correctRef.current, TOTAL);
+      return;
+    }
+    setTi(idx); setTrialPhase('isi'); setRt(null);
+    const isiTime = 800 + Math.random()*1200;
+    // Maybe show a distractor during ISI
+    const showDistractor = currentRound.distract && Math.random()<0.3;
+    if (showDistractor) {
+      setTimeout(() => {
+        setTrialPhase('distractor');
+        setTimeout(() => {
+          if (trialPhase==='distractor') setTrialPhase('isi');
+        }, 300);
+      }, isiTime * 0.5);
+    }
+    timerRef.current = setTimeout(() => {
+      startRef.current = Date.now();
+      setTrialPhase('target');
+      timerRef.current = setTimeout(() => {
+        setTrialPhase('miss');
+        setTimeout(() => runTrial(idx+1), 700);
+      }, currentRound.window);
+    }, isiTime);
+  };
+
+  useEffect(() => {
+    correctRef.current = 0;
+    setCorrect(0); setTi(0); setRtList([]); setRt(null);
+    runTrial(0);
+    return () => { if(timerRef.current) clearTimeout(timerRef.current); };
+  }, [roundIdx]);
+
+  const handleTap = () => {
+    if (trialPhase==='target') {
+      clearTimeout(timerRef.current);
+      const elapsed = Date.now()-startRef.current;
+      setRt(elapsed);
+      setRtList(l=>[...l,elapsed]);
+      correctRef.current += 1;
+      setCorrect(c=>c+1);
+      setTrialPhase('hit');
+      setTimeout(() => runTrial(tiRef.current+1), 600);
+    } else if (trialPhase==='isi'||trialPhase==='distractor') {
+      setTrialPhase('too_early');
+      setTimeout(() => runTrial(tiRef.current), 800);
+    }
+  };
+
+  if (phase==='transition') return renderTransition();
+  if (phase==='done') {
+    const avg = rtList.length>0 ? Math.round(rtList.reduce((a,b)=>a+b,0)/rtList.length) : 0;
+    return renderDone('⚡',`Reaction Tap Complete! Avg RT: ${avg}ms`);
+  }
+
+  const bgMap = {isi:'#111',target:'#FFB34722',distractor:'#FF6B6B22',hit:'#4ECDC422',miss:'#FF6B6B22',too_early:'#FF6B6B22'};
+  const borderMap = {isi:'#222',target:'#FFB347',distractor:'#FF6B6B',hit:'#4ECDC4',miss:'#FF6B6B',too_early:'#FF6B6B'};
+  const emojiMap = {isi:'',target:'⭐',distractor:'✕',hit:'⭐',miss:'⭐',too_early:'⚡'};
+  const msgMap = {isi:'Get ready...',target:'TAP NOW!',distractor:'',hit:`${rt}ms ✓`,miss:'Too slow!',too_early:'Too early!'};
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement(RoundHeader,{roundIdx,totalRounds:ROUND_SPECS.length,label:currentRound.label,score,color:'#E8A838'}),
+    React.createElement('div',{style:{color:'#555',fontSize:12,marginBottom:16}},
+      `Trial ${ti+1}/${TOTAL} · Hits: ${correct}`),
+    React.createElement('div',{
+      onClick:handleTap,
+      style:{
+        width:160,height:160,borderRadius:'50%',margin:'0 auto 16px',
+        display:'flex',alignItems:'center',justifyContent:'center',
+        fontSize:trialPhase==='isi'?0:56,
+        background:bgMap[trialPhase]||'#111',
+        border:`4px solid ${borderMap[trialPhase]||'#222'}`,
+        cursor:'pointer',transition:'all 0.12s',
+        boxShadow:trialPhase==='target'?'0 0 30px #FFB34788':'none',
+        userSelect:'none'
+      }
+    },emojiMap[trialPhase]||''),
+    React.createElement('div',{style:{
+      color:trialPhase==='hit'?'#4ECDC4':trialPhase==='miss'||trialPhase==='too_early'?'#FF6B6B':trialPhase==='target'?'#FFB347':'#444',
+      fontWeight:700,fontSize:15
+    }},msgMap[trialPhase]||''),
+    rtList.length>0&&React.createElement('div',{style:{color:'#555',fontSize:12,marginTop:8}},
+      `Avg: ${Math.round(rtList.reduce((a,b)=>a+b,0)/rtList.length)}ms`)
+  );
+}
+
+// ── VISUAL SEARCH ──────────────────────────────────────────────────────
+function VisualSearch({ config, onComplete }) {
+  const ROUND_SPECS = config.roundSpecs || [
+    { gridSize:3, similar:false, timeLimit:10, label:'3×3 grid, distinct target'    },
+    { gridSize:3, similar:false, timeLimit:8,  label:'3×3 grid, faster'             },
+    { gridSize:4, similar:false, timeLimit:10, label:'4×4 grid, distinct target'    },
+    { gridSize:4, similar:false, timeLimit:8,  label:'4×4 grid, faster'             },
+    { gridSize:4, similar:true,  timeLimit:10, label:'4×4 grid, similar distractors'},
+    { gridSize:5, similar:false, timeLimit:12, label:'5×5 grid, distinct'           },
+    { gridSize:5, similar:true,  timeLimit:12, label:'5×5 grid, similar distractors'},
+    { gridSize:5, similar:true,  timeLimit:9,  label:'5×5 similar — expert'         },
+  ];
+  const DISTINCT_SETS = [
+    { target:'⭐', distractors:['🔵','🔵','🔵','🔵','🔵','🔵','🔵','🔵'] },
+    { target:'🦊', distractors:['🐱','🐱','🐱','🐱','🐱','🐱','🐱','🐱'] },
+    { target:'🌸', distractors:['🌿','🌿','🌿','🌿','🌿','🌿','🌿','🌿'] },
+    { target:'🔴', distractors:['🔷','🔷','🔷','🔷','🔷','🔷','🔷','🔷'] },
+  ];
+  const SIMILAR_SETS = [
+    { target:'🐱', distractors:['🐶','🐶','🐶','🐶','🐶','🐶','🐶','🐶'] },
+    { target:'🟠', distractors:['🟡','🟡','🟡','🟡','🟡','🟡','🟡','🟡'] },
+    { target:'🌙', distractors:['⭐','⭐','⭐','⭐','⭐','⭐','⭐','⭐'] },
+    { target:'🐸', distractors:['🐊','🐊','🐊','🐊','🐊','🐊','🐊','🐊'] },
+  ];
+
+  const { currentRound, roundIdx, score, phase, completeRound, renderTransition, renderDone } =
+    useProgression(ROUND_SPECS, onComplete);
+
+  const makeGrid = (r) => {
+    const sets = r.similar ? SIMILAR_SETS : DISTINCT_SETS;
+    const set  = sets[Math.floor(Math.random()*sets.length)];
+    const n    = r.gridSize * r.gridSize;
+    const targetPos = Math.floor(Math.random()*n);
+    return Array.from({length:n}, (_,i)=>({
+      id:i, emoji: i===targetPos ? set.target : set.distractors[i%set.distractors.length],
+      isTarget: i===targetPos
+    }));
+  };
+
+  const [grid,    setGrid]    = useState(() => makeGrid(currentRound));
+  const [found,   setFound]   = useState(false);
+  const [wrong,   setWrong]   = useState(null);
+  const [timeLeft,setTimeLeft]= useState(currentRound.timeLimit);
+  const [correct, setCorrect] = useState(0);
+  const [roundN,  setRoundN]  = useState(0); // sub-rounds within game round
+  const SUBS = 3;
+
+  useEffect(() => {
+    setGrid(makeGrid(currentRound)); setFound(false); setWrong(null);
+    setTimeLeft(currentRound.timeLimit); setCorrect(0); setRoundN(0);
+  }, [roundIdx]);
+
+  useEffect(() => {
+    if (found||wrong) return;
+    if (timeLeft<=0) {
+      const nc = correct;
+      const nr = roundN+1;
+      if (nr>=SUBS) { completeRound(nc,SUBS); return; }
+      setRoundN(nr); setGrid(makeGrid(currentRound)); setWrong('timeout'); setFound(false);
+      setTimeout(()=>{ setWrong(null); setTimeLeft(currentRound.timeLimit); },800);
+      return;
+    }
+    const t=setTimeout(()=>setTimeLeft(s=>s-1),1000);
+    return ()=>clearTimeout(t);
+  },[timeLeft,found,wrong]);
+
+  const tap=(cell)=>{
+    if(found||wrong) return;
+    if(cell.isTarget){
+      setFound(true);
+      const nc=correct+1;
+      setCorrect(nc);
+      setTimeout(()=>{
+        const nr=roundN+1;
+        if(nr>=SUBS){completeRound(nc,SUBS);}
+        else{setRoundN(nr);setGrid(makeGrid(currentRound));setFound(false);setTimeLeft(currentRound.timeLimit);}
+      },600);
+    } else {
+      setWrong(cell.id);
+      setTimeout(()=>setWrong(null),500);
+    }
+  };
+
+  if (phase==='transition') return renderTransition();
+  if (phase==='done')       return renderDone('🔍','Visual Search Complete!');
+
+  const timerColor=timeLeft<=3?'#FF6B6B':timeLeft<=5?'#FFB347':'#4ECDC4';
+  const target = grid.find(c=>c.isTarget);
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement(RoundHeader,{roundIdx,totalRounds:ROUND_SPECS.length,label:currentRound.label,score,color:'#E8A838'}),
+    React.createElement('div',{style:{display:'flex',justifyContent:'space-between',marginBottom:8,padding:'0 4px'}},
+      React.createElement('span',{style:{color:'#aaa',fontSize:13}},`Search ${roundN+1}/${SUBS}`),
+      React.createElement('span',{style:{color:timerColor,fontWeight:700,fontSize:15}},`${timeLeft}s`)
+    ),
+    React.createElement('div',{style:{display:'flex',alignItems:'center',gap:8,justifyContent:'center',marginBottom:12}},
+      React.createElement('span',{style:{color:'#888',fontSize:13}},'Find:'),
+      React.createElement('span',{style:{fontSize:config.large?32:26,background:'#FFB34722',border:'2px solid #FFB347',padding:'4px 10px',borderRadius:8}},target.emoji)
+    ),
+    React.createElement('div',{style:{
+      display:'inline-grid',
+      gridTemplateColumns:`repeat(${currentRound.gridSize},1fr)`,
+      gap:4,background:'#2a2f4a',padding:4,borderRadius:12,
+      boxShadow:found?'0 0 20px #4ECDC466':''
+    }},
+      ...grid.map(cell=>{
+        const cellSize=Math.min(56,Math.floor(220/currentRound.gridSize));
+        return React.createElement('div',{key:cell.id,onClick:()=>tap(cell),
+          style:{
+            width:cellSize,height:cellSize,borderRadius:6,
+            display:'flex',alignItems:'center',justifyContent:'center',
+            fontSize:Math.min(config.large?30:24,Math.floor(cellSize*0.6)),
+            background:found&&cell.isTarget?'#4ECDC422':wrong===cell.id?'#FF6B6B22':'#1e2235',
+            border:found&&cell.isTarget?'2px solid #4ECDC4':wrong===cell.id?'2px solid #FF6B6B':'2px solid transparent',
+            cursor:'pointer',transition:'all 0.12s'
+          }
+        },cell.emoji);
+      })
+    ),
+    found&&React.createElement('div',{style:{color:'#4ECDC4',fontWeight:700,fontSize:14,marginTop:10}},'✓ Found!')
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// 👁️ VISUOSPATIAL
+// ══════════════════════════════════════════════════════════════════════
+
+// ── MENTAL ROTATION ────────────────────────────────────────────────────
+function MentalRotation({ config, onComplete }) {
+  const ROUND_SPECS = config.roundSpecs || [
+    { type:'2d', rotation:90,  label:'2D shapes, 90° rotation'     },
+    { type:'2d', rotation:180, label:'2D shapes, 180° rotation'    },
+    { type:'2d', rotation:'any',label:'2D shapes, any angle'       },
+    { type:'2d', rotation:'any',label:'2D, faster'                 },
+    { type:'emoji',rotation:90, label:'Emoji objects, 90°'         },
+    { type:'emoji',rotation:180,label:'Emoji objects, 180°'        },
+    { type:'emoji',rotation:'any',label:'Emoji, any angle'         },
+    { type:'emoji',rotation:'any',label:'Emoji, speed round'       },
+  ];
+  const SHAPES_2D = [
+    { name:'L',  svg:(rot,col)=>`<svg width="60" height="60" viewBox="0 0 60 60"><g transform="rotate(${rot} 30 30)"><rect x="15" y="10" width="12" height="36" fill="${col}"/><rect x="15" y="34" width="28" height="12" fill="${col}"/></g></svg>` },
+    { name:'T',  svg:(rot,col)=>`<svg width="60" height="60" viewBox="0 0 60 60"><g transform="rotate(${rot} 30 30)"><rect x="10" y="10" width="40" height="12" fill="${col}"/><rect x="24" y="10" width="12" height="36" fill="${col}"/></g></svg>` },
+    { name:'F',  svg:(rot,col)=>`<svg width="60" height="60" viewBox="0 0 60 60"><g transform="rotate(${rot} 30 30)"><rect x="14" y="10" width="12" height="40" fill="${col}"/><rect x="14" y="10" width="26" height="10" fill="${col}"/><rect x="14" y="25" width="20" height="10" fill="${col}"/></g></svg>` },
+    { name:'Z',  svg:(rot,col)=>`<svg width="60" height="60" viewBox="0 0 60 60"><g transform="rotate(${rot} 30 30)"><rect x="12" y="10" width="28" height="10" fill="${col}"/><rect x="22" y="20" width="10" height="20" fill="${col}"/><rect x="20" y="40" width="28" height="10" fill="${col}"/></g></svg>` },
+  ];
+  const EMOJI_PAIRS = [
+    ['🔑','🗝️','📎','📌'],
+    ['🌙','⭐','☀️','⚡'],
+    ['🍎','🍊','🍋','🍇'],
+    ['🐱','🐶','🐸','🐼'],
+  ];
+
+  const { currentRound, roundIdx, score, phase, completeRound, renderTransition, renderDone } =
+    useProgression(ROUND_SPECS, onComplete);
+
+  const makeQ = (r) => {
+    if (r.type==='2d') {
+      const shape  = SHAPES_2D[Math.floor(Math.random()*SHAPES_2D.length)];
+      const angles = [0,90,180,270];
+      const baseAngle = angles[Math.floor(Math.random()*angles.length)];
+      const rot    = r.rotation==='any' ? angles[Math.floor(Math.random()*angles.length)] : r.rotation;
+      const correctAngle = (baseAngle + rot) % 360;
+      const wrongAngles  = angles.filter(a=>a!==correctAngle).sort(()=>Math.random()-0.5).slice(0,3);
+      const opts = [...wrongAngles, correctAngle].sort(()=>Math.random()-0.5);
+      return { shape, baseAngle, correct:correctAngle, opts, type:'2d' };
+    } else {
+      const pair   = EMOJI_PAIRS[Math.floor(Math.random()*EMOJI_PAIRS.length)];
+      const target = pair[0];
+      const distractors = pair.slice(1);
+      const opts   = [target,...distractors].sort(()=>Math.random()-0.5);
+      return { target, opts, type:'emoji' };
+    }
+  };
+
+  const [questions, setQuestions] = useState(() => Array.from({length:3},()=>makeQ(currentRound)));
+  const [qi,        setQi]        = useState(0);
+  const [picked,    setPicked]    = useState(null);
+  const [correct,   setCorrect]   = useState(0);
+
+  useEffect(() => {
+    setQuestions(Array.from({length:3},()=>makeQ(currentRound)));
+    setQi(0); setPicked(null); setCorrect(0);
+  }, [roundIdx]);
+
+  const choose = (opt) => {
+    if (picked!==null) return;
+    const q = questions[qi];
+    let ok;
+    if (q.type==='2d')    ok = opt===q.correct;
+    else                  ok = opt===q.target;
+    setPicked(opt);
+    const nc = correct+(ok?1:0);
+    setTimeout(() => {
+      if (qi+1>=3) completeRound(nc,3);
+      else { setQi(i=>i+1); setPicked(null); setCorrect(nc); }
+    }, 900);
+  };
+
+  if (phase==='transition') return renderTransition();
+  if (phase==='done')       return renderDone('🔄','Mental Rotation Complete!');
+
+  const q = questions[qi];
+
+  if (q.type==='2d') {
+    return React.createElement('div',{style:{textAlign:'center'}},
+      React.createElement(RoundHeader,{roundIdx,totalRounds:ROUND_SPECS.length,label:currentRound.label,score,color:'#0096A0'}),
+      React.createElement('div',{style:{color:'#888',fontSize:12,marginBottom:8}},'Which rotation matches the original?'),
+      React.createElement('div',{style:{display:'flex',alignItems:'center',gap:16,justifyContent:'center',marginBottom:16}},
+        React.createElement('div',{dangerouslySetInnerHTML:{__html:q.shape.svg(q.baseAngle,'#6C63FF')}}),
+        React.createElement('span',{style:{color:'#555',fontSize:20,fontWeight:700}},'→'),
+        React.createElement('div',{style:{width:60,height:60,borderRadius:8,border:'3px dashed #555',display:'flex',alignItems:'center',justifyContent:'center',color:'#555',fontSize:24}},'?')
+      ),
+      React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,maxWidth:300,margin:'0 auto'}},
+        ...q.opts.map((angle,i)=>{
+          let bg='#1e2235',border='#2a2f4a';
+          if(picked!==null){if(angle===q.correct){bg='#4ECDC422';border='#4ECDC4';}else if(angle===picked){bg='#FF6B6B22';border='#FF6B6B';}}
+          return React.createElement('div',{key:i,onClick:()=>choose(angle),
+            style:{background:bg,border:`2px solid ${border}`,borderRadius:12,padding:8,cursor:picked!==null?'default':'pointer',
+              display:'flex',justifyContent:'center',transition:'all 0.2s'},
+            dangerouslySetInnerHTML:{__html:q.shape.svg(angle,'#4ECDC4')}});
+        })
+      )
+    );
+  }
+
+  // emoji type
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement(RoundHeader,{roundIdx,totalRounds:ROUND_SPECS.length,label:currentRound.label,score,color:'#0096A0'}),
+    React.createElement('div',{style:{color:'#888',fontSize:12,marginBottom:12}},'Which emoji matches the original?'),
+    React.createElement('div',{style:{fontSize:config.large?64:54,marginBottom:16,padding:'16px',background:'#1e2235',
+      border:'2px solid #2a2f4a',borderRadius:16,display:'inline-block'}},q.target),
+    React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,maxWidth:300,margin:'0 auto'}},
+      ...q.opts.map((opt,i)=>{
+        let bg='#1e2235',border='#2a2f4a';
+        if(picked!==null){if(opt===q.target){bg='#4ECDC422';border='#4ECDC4';}else if(opt===picked){bg='#FF6B6B22';border='#FF6B6B';}}
+        return React.createElement('button',{key:i,onClick:()=>choose(opt),
+          style:{padding:'16px',background:bg,border:`2px solid ${border}`,borderRadius:12,
+            fontSize:config.large?40:34,cursor:picked!==null?'default':'pointer',transition:'all 0.2s'}},opt);
+      })
+    )
+  );
+}
+
+// ── MAP NAVIGATOR ──────────────────────────────────────────────────────
+function MapNavigator({ config, onComplete }) {
+  const ROUND_SPECS = config.roundSpecs || [
+    { steps:2, gridSize:4, label:'2 steps on 4×4 grid'  },
+    { steps:3, gridSize:4, label:'3 steps on 4×4 grid'  },
+    { steps:3, gridSize:5, label:'3 steps on 5×5 grid'  },
+    { steps:4, gridSize:5, label:'4 steps on 5×5 grid'  },
+    { steps:4, gridSize:6, label:'4 steps on 6×6 grid'  },
+    { steps:5, gridSize:6, label:'5 steps on 6×6 grid'  },
+    { steps:6, gridSize:6, label:'6 steps on 6×6 grid'  },
+    { steps:7, gridSize:6, label:'7 steps — expert'     },
+  ];
+  const DIRS = [
+    { label:'North ↑', dr:-1, dc:0 },
+    { label:'South ↓', dr:1,  dc:0 },
+    { label:'West ←',  dr:0,  dc:-1 },
+    { label:'East →',  dr:0,  dc:1  },
+  ];
+
+  const { currentRound, roundIdx, score, phase, completeRound, renderTransition, renderDone } =
+    useProgression(ROUND_SPECS, onComplete);
+
+  const makeQ = (r) => {
+    const g = r.gridSize;
+    let sr = Math.floor(Math.random()*g), sc = Math.floor(Math.random()*g);
+    const steps = [];
+    let cr=sr, cc=sc;
+    for (let i=0;i<r.steps;i++) {
+      const valid = DIRS.filter(d=>{
+        const nr=cr+d.dr, nc=cc+d.dc;
+        return nr>=0&&nr<g&&nc>=0&&nc<g;
+      });
+      const d = valid[Math.floor(Math.random()*valid.length)];
+      steps.push(d.label);
+      cr+=d.dr; cc+=d.dc;
+    }
+    // Generate 4 answer options
+    const opts = new Set();
+    opts.add(`Row ${cr+1}, Col ${cc+1}`);
+    while(opts.size<4){
+      const rr=Math.floor(Math.random()*g), rc=Math.floor(Math.random()*g);
+      opts.add(`Row ${rr+1}, Col ${rc+1}`);
+    }
+    return { start:[sr,sc], steps, answer:`Row ${cr+1}, Col ${cc+1}`, opts:[...opts].sort(()=>Math.random()-0.5), grid:g };
+  };
+
+  const [questions,setQuestions]=useState(()=>Array.from({length:3},()=>makeQ(currentRound)));
+  const [qi,  setQi]  =useState(0);
+  const [picked,setPicked]=useState(null);
+  const [correct,setCorrect]=useState(0);
+  const [showMap,setShowMap]=useState(false);
+
+  useEffect(()=>{
+    setQuestions(Array.from({length:3},()=>makeQ(currentRound)));
+    setQi(0);setPicked(null);setCorrect(0);setShowMap(false);
+  },[roundIdx]);
+
+  const choose=(opt)=>{
+    if(picked) return;
+    const q=questions[qi];
+    const ok=opt===q.answer;
+    setPicked(opt);
+    const nc=correct+(ok?1:0);
+    setTimeout(()=>{
+      if(qi+1>=3) completeRound(nc,3);
+      else{setQi(i=>i+1);setPicked(null);setCorrect(nc);setShowMap(false);}
+    },1000);
+  };
+
+  if (phase==='transition') return renderTransition();
+  if (phase==='done')       return renderDone('🗺️','Map Navigator Complete!');
+
+  const q=questions[qi];
+  return React.createElement('div',null,
+    React.createElement(RoundHeader,{roundIdx,totalRounds:ROUND_SPECS.length,label:currentRound.label,score,color:'#0096A0'}),
+    React.createElement('div',{style:{color:'#aaa',fontSize:12,marginBottom:8,textAlign:'center'}},`Q${qi+1}/3`),
+    React.createElement('div',{style:{background:'#1e2235',border:'1px solid #2a2f4a',borderRadius:14,padding:14,marginBottom:12}},
+      React.createElement('div',{style:{color:'#0096A0',fontWeight:700,fontSize:13,marginBottom:6}},
+        `Start: Row ${q.start[0]+1}, Col ${q.start[1]+1}`),
+      React.createElement('div',{style:{color:'#e0e0ff',fontSize:13,lineHeight:1.8}},
+        q.steps.map((s,i)=>React.createElement('div',{key:i},`${i+1}. Move ${s}`))
+      ),
+      React.createElement('div',{style:{color:'#FFB347',fontWeight:600,fontSize:13,marginTop:6}},'Where do you end up?')
+    ),
+    !showMap&&React.createElement('button',{onClick:()=>setShowMap(true),
+      style:{background:'none',border:'1px solid #333',borderRadius:8,color:'#555',cursor:'pointer',fontSize:12,
+        padding:'4px 12px',marginBottom:10,display:'block',margin:'0 auto 10px'}},
+      '🗺️ Show grid'),
+    showMap&&React.createElement('div',{style:{display:'inline-grid',
+      gridTemplateColumns:`repeat(${q.grid},1fr)`,gap:2,background:'#2a2f4a',
+      padding:2,borderRadius:8,marginBottom:10,maxWidth:'100%'}},
+      ...Array.from({length:q.grid*q.grid},(_,idx)=>{
+        const r=Math.floor(idx/q.grid),c=idx%q.grid;
+        const isStart=r===q.start[0]&&c===q.start[1];
+        const sz=Math.min(38,Math.floor(200/q.grid));
+        return React.createElement('div',{key:idx,style:{
+          width:sz,height:sz,borderRadius:3,
+          background:isStart?'#0096A022':'#151928',
+          border:isStart?'2px solid #0096A0':'1px solid #1e2235',
+          display:'flex',alignItems:'center',justifyContent:'center',
+          fontSize:9,color:isStart?'#0096A0':'#333'
+        }},isStart?'▶':'');
+      })
+    ),
+    React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8,maxWidth:340,margin:'0 auto'}},
+      ...q.opts.map((opt,i)=>{
+        let bg='#1e2235',border='#2a2f4a',color='#e0e0ff';
+        if(picked){if(opt===q.answer){bg='#4ECDC422';border='#4ECDC4';}else if(opt===picked){bg='#FF6B6B22';border='#FF6B6B';}}
+        return React.createElement('button',{key:i,onClick:()=>choose(opt),
+          style:{padding:'12px 8px',background:bg,border:`2px solid ${border}`,borderRadius:12,color,
+            fontSize:config.large?14:12,cursor:picked?'default':'pointer',fontWeight:600,transition:'all 0.2s'}},opt);
+      })
+    )
+  );
+}
+
+// ══════════════════════════════════════════════════════════════════════
+// 🤝 SOCIAL COGNITION
+// ══════════════════════════════════════════════════════════════════════
+
+// ── EMOTION MATCH ──────────────────────────────────────────────────────
+function EmotionMatch({ config, onComplete }) {
+  const ROUND_SPECS = config.roundSpecs || [
+    { emotions:['happy','sad','angry','scared'],        opts:2, label:'4 basic emotions, 2 choices'   },
+    { emotions:['happy','sad','angry','scared'],        opts:4, label:'4 basic emotions, 4 choices'   },
+    { emotions:['happy','sad','angry','scared','surprised','disgusted'], opts:4, label:'6 emotions'  },
+    { emotions:['happy','sad','angry','scared','surprised','disgusted'], opts:4, label:'6 emotions, more Qs'},
+    { emotions:['happy','sad','angry','scared','surprised','disgusted','proud','embarrassed'], opts:4, label:'8 emotions'},
+    { emotions:['happy','sad','angry','scared','surprised','disgusted','proud','embarrassed'], opts:4, label:'8 emotions, faster'},
+    { emotions:['bored','anxious','jealous','confused','relieved','content'], opts:4, label:'Subtle emotions'},
+    { emotions:['bored','anxious','jealous','confused','relieved','content'], opts:4, label:'Subtle emotions, speed'},
+  ];
+
+  const EMOTION_DATA = {
+    happy:      { emoji:'😊', label:'Happy',       hint:'Smiling, joyful'       },
+    sad:        { emoji:'😢', label:'Sad',          hint:'Tearful, down'         },
+    angry:      { emoji:'😠', label:'Angry',        hint:'Frowning, cross'       },
+    scared:     { emoji:'😨', label:'Scared',       hint:'Wide eyes, frightened' },
+    surprised:  { emoji:'😲', label:'Surprised',    hint:'Open mouth, shocked'   },
+    disgusted:  { emoji:'🤢', label:'Disgusted',    hint:'Revolted, put off'     },
+    proud:      { emoji:'😤', label:'Proud',        hint:'Chest out, triumphant' },
+    embarrassed:{ emoji:'😳', label:'Embarrassed',  hint:'Flushed, awkward'      },
+    bored:      { emoji:'😐', label:'Bored',        hint:'Flat, uninterested'    },
+    anxious:    { emoji:'😰', label:'Anxious',      hint:'Worried, tense'        },
+    jealous:    { emoji:'😒', label:'Jealous',      hint:'Envious, resentful'    },
+    confused:   { emoji:'🤔', label:'Confused',     hint:'Puzzled, unsure'       },
+    relieved:   { emoji:'😮‍💨', label:'Relieved',    hint:'Tension released'      },
+    content:    { emoji:'🙂', label:'Content',      hint:'Calm, satisfied'       },
+  };
+
+  const { currentRound, roundIdx, score, phase, completeRound, renderTransition, renderDone } =
+    useProgression(ROUND_SPECS, onComplete);
+
+  const makeQs = (r) => Array.from({length:4}, () => {
+    const emo   = r.emotions[Math.floor(Math.random()*r.emotions.length)];
+    const wrong = r.emotions.filter(e=>e!==emo).sort(()=>Math.random()-0.5).slice(0,r.opts-1);
+    const opts  = [emo,...wrong].sort(()=>Math.random()-0.5);
+    return { emo, opts };
+  });
+
+  const [qs,      setQs]      = useState(() => makeQs(currentRound));
+  const [qi,      setQi]      = useState(0);
+  const [picked,  setPicked]  = useState(null);
+  const [correct, setCorrect] = useState(0);
+
+  useEffect(() => {
+    setQs(makeQs(currentRound)); setQi(0); setPicked(null); setCorrect(0);
+  }, [roundIdx]);
+
+  const choose = (opt) => {
+    if (picked) return;
+    setPicked(opt);
+    const ok = opt===qs[qi].emo;
+    const nc = correct+(ok?1:0);
+    setTimeout(() => {
+      if (qi+1>=qs.length) completeRound(nc,qs.length);
+      else { setQi(i=>i+1); setPicked(null); setCorrect(nc); }
+    }, 900);
+  };
+
+  if (phase==='transition') return renderTransition();
+  if (phase==='done')       return renderDone('🤝','Emotion Match Complete!');
+
+  const q  = qs[qi];
+  const ed = EMOTION_DATA[q.emo];
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement(RoundHeader,{roundIdx,totalRounds:ROUND_SPECS.length,label:currentRound.label,score,color:'#C2185B'}),
+    React.createElement('div',{style:{color:'#aaa',fontSize:12,marginBottom:14}},`Q${qi+1}/4 — What emotion is this?`),
+    React.createElement('div',{style:{
+      fontSize:config.large?90:76,marginBottom:16,lineHeight:1,
+      padding:'20px',background:'#1e2235',border:'2px solid #2a2f4a',
+      borderRadius:24,display:'inline-block'
+    }},ed.emoji),
+    React.createElement('div',{style:{display:'grid',
+      gridTemplateColumns:currentRound.opts===2?'1fr 1fr':'1fr 1fr',gap:10,maxWidth:320,margin:'0 auto'}},
+      ...q.opts.map((opt,i)=>{
+        const od=EMOTION_DATA[opt];
+        let bg='#1e2235',border='#2a2f4a',color='#e0e0ff';
+        if(picked){
+          if(opt===q.emo){bg='#C2185B22';border='#C2185B';}
+          else if(opt===picked){bg='#FF6B6B22';border='#FF6B6B';}
+        }
+        return React.createElement('button',{key:i,onClick:()=>choose(opt),
+          style:{padding:'13px 8px',background:bg,border:`2px solid ${border}`,borderRadius:12,
+            color,fontSize:config.large?15:13,cursor:picked?'default':'pointer',fontWeight:600,
+            transition:'all 0.2s'}},od?od.label:opt);
+      })
+    ),
+    picked&&React.createElement('div',{style:{marginTop:10,color:picked===q.emo?'#C2185B':'#FF6B6B',fontWeight:700,fontSize:13}},
+      picked===q.emo?`✓ ${ed.label}!`:`✗ It was ${ed.label} — ${ed.hint}`)
+  );
+}
+
+// ── READ THE ROOM ──────────────────────────────────────────────────────
+function ReadTheRoom({ config, onComplete }) {
+  const ALL_SCENARIOS = [
+    // Level 1 — simple
+    { scenario:"Tom just got a puppy for his birthday. He's jumping around the room.",
+      question:"How does Tom feel?", answer:"Happy", opts:["Happy","Sad","Angry","Bored"] },
+    { scenario:"Maria worked hard on her drawing. Her classmate said it looked terrible.",
+      question:"How does Maria probably feel?", answer:"Upset", opts:["Proud","Upset","Excited","Grateful"] },
+    { scenario:"Jake has been waiting for his friend for 2 hours. The friend hasn't arrived or called.",
+      question:"How does Jake likely feel?", answer:"Frustrated", opts:["Grateful","Relieved","Frustrated","Happy"] },
+    { scenario:"Priya stood up to give her speech in front of the whole school. Her heart was racing.",
+      question:"How does Priya most likely feel?", answer:"Nervous", opts:["Bored","Nervous","Angry","Content"] },
+    // Level 2 — moderate
+    { scenario:"Leo just found out he didn't get the job he really wanted. He thought the interview went well.",
+      question:"How does Leo most likely feel?", answer:"Disappointed", opts:["Disappointed","Relieved","Proud","Amused"] },
+    { scenario:"After years of hard work, Nadia's research paper was accepted by a top journal.",
+      question:"What is Nadia most likely feeling?", answer:"Proud", opts:["Indifferent","Proud","Anxious","Embarrassed"] },
+    { scenario:"David saw his best friend laughing with a group of people he doesn't know. They stopped when David walked over.",
+      question:"How does David probably feel?", answer:"Excluded", opts:["Included","Excluded","Relieved","Overjoyed"] },
+    // Level 3 — subtle/complex
+    { scenario:"Aisha received a promotion at work. When she told her colleague, he smiled and said 'Oh, how interesting.'",
+      question:"How does Aisha's colleague probably feel?", answer:"Jealous", opts:["Genuinely happy","Jealous","Confused","Relieved"] },
+    { scenario:"After a long argument, Sara finally got her way. But she noticed her friend had gone very quiet.",
+      question:"Sara should probably feel:", answer:"Concerned", opts:["Triumphant","Concerned","Indifferent","Amused"] },
+  ];
+  const ROUND_SPECS = ALL_SCENARIOS.slice(0,8).map((s,i)=>({sIdx:i, label:`Scenario ${i+1}`}));
+  const { currentRound, roundIdx, score, phase, completeRound, renderTransition, renderDone } =
+    useProgression(ROUND_SPECS, onComplete);
+
+  const s=ALL_SCENARIOS[currentRound.sIdx];
+  const [picked,setPicked]=useState(null);
+  const [opts]=useState(()=>ALL_SCENARIOS.map(s=>[...new Set([s.answer,...s.opts])].sort(()=>Math.random()-0.5).slice(0,4)));
+
+  useEffect(()=>{setPicked(null);},[roundIdx]);
+
+  const choose=(opt)=>{
+    if(picked) return;
+    setPicked(opt);
+    completeRound(opt===s.answer?1:0,1);
+  };
+
+  if (phase==='transition') return renderTransition();
+  if (phase==='done')       return renderDone('🤝','Read the Room Complete!');
+
+  return React.createElement('div',null,
+    React.createElement(RoundHeader,{roundIdx,totalRounds:8,label:currentRound.label,score,color:'#C2185B'}),
+    React.createElement('div',{style:{fontSize:config.large?15:13,color:'#e0e0ff',background:'#1e2235',
+      border:'1px solid #2a2f4a',borderRadius:14,padding:16,marginBottom:14,lineHeight:1.8,marginTop:8}},s.scenario),
+    React.createElement('div',{style:{color:'#C2185B',fontWeight:600,fontSize:13,marginBottom:12,textAlign:'center'}},s.question),
+    React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,maxWidth:360,margin:'0 auto'}},
+      ...opts[currentRound.sIdx].map((opt,i)=>{
+        let bg='#1e2235',border='#2a2f4a',color='#e0e0ff';
+        if(picked){if(opt===s.answer){bg='#C2185B22';border='#C2185B';}else if(opt===picked){bg='#FF6B6B22';border='#FF6B6B';}}
+        return React.createElement('button',{key:i,onClick:()=>choose(opt),
+          style:{padding:'13px 8px',background:bg,border:`2px solid ${border}`,borderRadius:12,
+            color,fontSize:config.large?15:13,cursor:picked?'default':'pointer',fontWeight:600,transition:'all 0.2s'}},opt);
+      })
+    ),
+    picked&&React.createElement('div',{style:{marginTop:10,textAlign:'center',
+      color:picked===s.answer?'#C2185B':'#FF6B6B',fontWeight:700,fontSize:13}},
+      picked===s.answer?'✓ Correct!':'✗ Answer: '+s.answer)
+  );
+}
+
+// ── EYES SAY ───────────────────────────────────────────────────────────
+function EyesSay({ config, onComplete }) {
+  const ALL_Q = [
+    { eyes:'😊', realEmotion:'Happy',    opts:['Happy','Sad','Angry','Bored'],        hint:'Crinkled, warm eyes' },
+    { eyes:'😠', realEmotion:'Angry',    opts:['Surprised','Angry','Amused','Calm'],  hint:'Furrowed brows, intense' },
+    { eyes:'😢', realEmotion:'Tearful',  opts:['Bored','Proud','Tearful','Excited'],  hint:'Glistening, downcast' },
+    { eyes:'😒', realEmotion:'Scornful', opts:['Scornful','Pleased','Shy','Nervous'], hint:'Half-lidded, dismissive' },
+    { eyes:'🤔', realEmotion:'Thinking', opts:['Sleepy','Thinking','Furious','Content'],hint:'Looking sideways' },
+    { eyes:'😳', realEmotion:'Shocked',  opts:['Bored','Shocked','Amused','Relieved'],hint:'Wide, raised brows' },
+    { eyes:'😌', realEmotion:'Content',  opts:['Sad','Anxious','Content','Surprised'], hint:'Soft, relaxed gaze' },
+    { eyes:'😰', realEmotion:'Worried',  opts:['Excited','Worried','Proud','Bored'],  hint:'Tense, furrowed' },
+  ];
+  const ROUND_SPECS = ALL_Q.map((q,i)=>({qIdx:i,label:`Eyes ${i+1} — read the expression`}));
+  const { currentRound, roundIdx, score, phase, completeRound, renderTransition, renderDone } =
+    useProgression(ROUND_SPECS, onComplete);
+
+  const q=ALL_Q[currentRound.qIdx];
+  const [picked,setPicked]=useState(null);
+  const [showHint,setShowHint]=useState(false);
+  const [opts]=useState(()=>ALL_Q.map(q=>[...new Set([q.realEmotion,...q.opts])].sort(()=>Math.random()-0.5).slice(0,4)));
+
+  useEffect(()=>{setPicked(null);setShowHint(false);},[roundIdx]);
+
+  const choose=(opt)=>{
+    if(picked) return;
+    setPicked(opt);
+    completeRound(opt===q.realEmotion?1:0,1);
+  };
+
+  if (phase==='transition') return renderTransition();
+  if (phase==='done')       return renderDone('👁️','Eyes Say Complete!');
+
+  return React.createElement('div',{style:{textAlign:'center'}},
+    React.createElement(RoundHeader,{roundIdx,totalRounds:8,label:currentRound.label,score,color:'#C2185B'}),
+    React.createElement('div',{style:{color:'#888',fontSize:12,marginBottom:14}},'What emotion do these eyes show?'),
+    // Show only the eyes of the emoji (crop illusion with overflow hidden)
+    React.createElement('div',{style:{
+      width:120,height:70,overflow:'hidden',margin:'0 auto 16px',
+      borderRadius:'50% 50% 0 0',background:'#1e2235',
+      border:'2px solid #2a2f4a',display:'flex',alignItems:'flex-start',
+      justifyContent:'center',paddingTop:8
+    }},
+      React.createElement('div',{style:{fontSize:config.large?90:80,lineHeight:1,marginTop:-8}},q.eyes)
+    ),
+    React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,maxWidth:320,margin:'0 auto 10px'}},
+      ...opts[currentRound.qIdx].map((opt,i)=>{
+        let bg='#1e2235',border='#2a2f4a',color='#e0e0ff';
+        if(picked){if(opt===q.realEmotion){bg='#C2185B22';border='#C2185B';}else if(opt===picked){bg='#FF6B6B22';border='#FF6B6B';}}
+        return React.createElement('button',{key:i,onClick:()=>choose(opt),
+          style:{padding:'13px 8px',background:bg,border:`2px solid ${border}`,borderRadius:12,
+            color,fontSize:config.large?15:13,cursor:picked?'default':'pointer',fontWeight:600,transition:'all 0.2s'}},opt);
+      })
+    ),
+    !picked&&React.createElement('button',{onClick:()=>setShowHint(h=>!h),
+      style:{background:'none',border:'1px solid #333',borderRadius:8,color:'#555',cursor:'pointer',fontSize:12,padding:'4px 12px'}},
+      showHint?`💡 ${q.hint}`:'💡 Hint'),
+    picked&&React.createElement('div',{style:{color:picked===q.realEmotion?'#C2185B':'#FF6B6B',fontWeight:700,fontSize:13}},
+      picked===q.realEmotion?`✓ ${q.realEmotion}!`:`✗ It was ${q.realEmotion} — ${q.hint}`)
+  );
+}
+
+
+
 // ── GAME PLAYER ────────────────────────────────────────────────
-const COMPONENTS = { ColorMatch, WhatsGone, OrientationQuiz, WordScramble, NumberPattern, SimonSays, SpatialRecall, MentalMath, WordAssociation, WhereAmI, WhatSeason, TimelineSort, ClockReading, NewsHeadlines, StoryRecall, DigitSpan, SentenceBuilder, SudokuMini, NBack, SynonymFinder, SpotDifference, ShapeAnalogy, JigsawPreview, VisualMatrix, CategoryFluency, RhymeTime, MissingLetter };
+const COMPONENTS = { ColorMatch, WhatsGone, OrientationQuiz, WordScramble, NumberPattern, SimonSays, SpatialRecall, MentalMath, WordAssociation, WhereAmI, WhatSeason, TimelineSort, ClockReading, NewsHeadlines, StoryRecall, DigitSpan, SentenceBuilder, SudokuMini, NBack, SynonymFinder, SpotDifference, ShapeAnalogy, JigsawPreview, VisualMatrix, CategoryFluency, RhymeTime, MissingLetter, StroopTest, StopSignal, TaskSwitch, TowerPlanner, ReactionTap, VisualSearch, MentalRotation, MapNavigator, EmotionMatch, ReadTheRoom, EyesSay };
 
 function GamePlayer({ game, onBack }) {
   const [completed, setCompleted] = useState(false);
