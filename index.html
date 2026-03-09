@@ -47,22 +47,22 @@ const LEVELS = [
 const GAMES = {
   memory:{
     kids:{
-      easy:  { name:"Color Match",     desc:"Match pairs of colorful tiles",    component:"ColorMatch", config:{pairs:4} },
-      medium:{ name:"Animal Pairs",    desc:"Find matching animal emojis",      component:"ColorMatch", config:{pairs:8} },
+      easy:  { name:"Color Match",     desc:"Match pairs of coloured tiles",    component:"ColorMatch", config:{pairs:4} },
+      medium:{ name:"Animal Pairs",    desc:"Match more coloured tiles",      component:"ColorMatch", config:{pairs:8} },
       hard:  { name:"Simon Says",      desc:"Repeat the color sequence",        component:"SimonSays",  config:{rounds:5,speed:800} },
     },
     teens:{
-      easy:  { name:"Tile Flip",       desc:"Classic memory matching",          component:"ColorMatch", config:{pairs:6} },
+      easy:  { name:"Tile Flip",       desc:"Flip and match coloured tiles",          component:"ColorMatch", config:{pairs:6} },
       medium:{ name:"Simon Says",      desc:"Repeat longer color sequences",    component:"SimonSays",  config:{rounds:7,speed:700} },
       hard:  { name:"Simon Sprint",    desc:"Fast-paced Simon challenge",       component:"SimonSays",  config:{rounds:10,speed:500} },
     },
     adults:{
-      easy:  { name:"Card Pairs",      desc:"Flip and match cards",             component:"ColorMatch", config:{pairs:8} },
+      easy:  { name:"Card Pairs",      desc:"Flip and match coloured tiles",             component:"ColorMatch", config:{pairs:8} },
       medium:{ name:"Simon Says",      desc:"Watch and repeat the sequence",    component:"SimonSays",  config:{rounds:8,speed:700} },
       hard:  { name:"Master Memory",   desc:"Advanced timed matching",          component:"ColorMatch", config:{pairs:16,timed:true} },
     },
     seniors:{
-      easy:  { name:"Simple Pairs",    desc:"Large, clear matching tiles",      component:"ColorMatch", config:{pairs:4,large:true} },
+      easy:  { name:"Simple Pairs",    desc:"Large, clear coloured tile pairs",      component:"ColorMatch", config:{pairs:4,large:true} },
       medium:{ name:"Simon Says",      desc:"Repeat the colour sequence",       component:"SimonSays",  config:{rounds:4,speed:1000} },
       hard:  { name:"Memory Challenge",desc:"More pairs to match",              component:"ColorMatch", config:{pairs:8} },
     },
@@ -214,7 +214,7 @@ const GAMES = {
   },
   visuospatial:{
     kids:{
-      easy:  { name:"Emotion Match",   desc:"Match the face to the feeling",         component:"EmotionMatch", config:{roundSpecs:[{emotions:['happy','sad','angry','scared'],opts:2,label:'4 basic emotions, 2 choices'},{emotions:['happy','sad','angry','scared'],opts:2,label:'4 emotions, pick from 2'},{emotions:['happy','sad','angry','scared'],opts:4,label:'4 emotions, 4 choices'},{emotions:['happy','sad','angry','scared'],opts:4,label:'4 emotions, more rounds'},{emotions:['happy','sad','angry','scared','surprised','disgusted'],opts:4,label:'6 emotions'},{emotions:['happy','sad','angry','scared','surprised','disgusted'],opts:4,label:'6 emotions, more Qs'},{emotions:['happy','sad','angry','scared','surprised','disgusted','proud','embarrassed'],opts:4,label:'8 emotions'},{emotions:['happy','sad','angry','scared','surprised','disgusted','proud','embarrassed'],opts:4,label:'8 emotions — expert'}],large:true} },
+      easy:  { name:"Mental Rotation", desc:"Match the rotated shape",              component:"MentalRotation", config:{} },
       medium:{ name:"Mental Rotation", desc:"Which shape matches after rotating?",   component:"MentalRotation",config:{roundSpecs:[{type:'2d',rotation:90,label:'2D shapes, 90°'},{type:'2d',rotation:90,label:'2D shapes, another 90°'},{type:'2d',rotation:180,label:'2D shapes, 180°'},{type:'2d',rotation:'any',label:'2D, any angle'},{type:'emoji',rotation:90,label:'Emoji objects'},{type:'emoji',rotation:180,label:'Emoji, 180°'},{type:'emoji',rotation:'any',label:'Emoji, any angle'},{type:'emoji',rotation:'any',label:'Emoji — expert'}],large:true} },
       hard:  { name:"Map Navigator",   desc:"Follow directions — where do you end up?",component:"MapNavigator",config:{roundSpecs:[{steps:2,gridSize:4,label:'2 steps on 4×4 grid'},{steps:2,gridSize:4,label:'2 steps, another grid'},{steps:3,gridSize:4,label:'3 steps on 4×4 grid'},{steps:3,gridSize:4,label:'3 steps, different start'},{steps:3,gridSize:5,label:'3 steps on 5×5 grid'},{steps:4,gridSize:5,label:'4 steps on 5×5 grid'},{steps:4,gridSize:5,label:'4 steps, different grid'},{steps:5,gridSize:5,label:'5 steps — challenge'}],large:true} },
     },
@@ -404,12 +404,22 @@ function ColorMatch({ config, onComplete }) {
     { pairs:7, timed:false, flipBack:700,  label:'7 pairs'      },
     { pairs:8, timed:true,  flipBack:600,  label:'8 pairs timed' },
   ];
-  const EMOJIS = ['🐱','🐶','🐸','🦊','🐻','🐼','🦁','🐯','🐮','🐷','🐙','🦋','🌸','⭐','🎯','🎨'];
+  // Colored tile pairs — solid colors, no emojis (clinically cleaner)
+  const TILE_COLORS = [
+    {bg:'#FF6B6B',label:'Red'},    {bg:'#6C63FF',label:'Purple'},
+    {bg:'#4ECDC4',label:'Teal'},   {bg:'#FFB347',label:'Orange'},
+    {bg:'#A8E6CF',label:'Green'},  {bg:'#FF8ED4',label:'Pink'},
+    {bg:'#87CEEB',label:'Blue'},   {bg:'#F7DC6F',label:'Yellow'},
+    {bg:'#E59866',label:'Brown'},  {bg:'#85C1E9',label:'Sky'},
+    {bg:'#82E0AA',label:'Lime'},   {bg:'#F1948A',label:'Salmon'},
+    {bg:'#AED6F1',label:'Periwinkle'},{bg:'#FDEBD0',label:'Cream'},
+    {bg:'#D7BDE2',label:'Lavender'},{bg:'#A9DFBF',label:'Mint'},
+  ];
   const { currentRound, roundIdx, score, phase, completeRound, renderTransition, renderDone } = useProgression(ROUND_SPECS, onComplete);
 
   const makeGrid = (pairs) => {
-    const pool = EMOJIS.slice(0,pairs);
-    return [...pool,...pool].sort(()=>Math.random()-0.5).map((e,i)=>({id:i,emoji:e,flipped:false,matched:false}));
+    const pool = TILE_COLORS.slice(0,pairs);
+    return [...pool,...pool].sort(()=>Math.random()-0.5).map((t,i)=>({id:i,bg:t.bg,label:t.label,flipped:false,matched:false}));
   };
 
   const [cards,    setCards]    = useState(()=>makeGrid(currentRound.pairs));
@@ -466,11 +476,12 @@ function ColorMatch({ config, onComplete }) {
     React.createElement('div',{style:{display:'grid',gridTemplateColumns:`repeat(${cols},1fr)`,gap:8,maxWidth:340,margin:'0 auto'}},
       ...cards.map(c=>React.createElement('div',{key:c.id,onClick:()=>flip(c.id),
         style:{aspectRatio:'1',display:'flex',alignItems:'center',justifyContent:'center',
-          fontSize:config.large?28:22,borderRadius:12,cursor:c.matched?'default':'pointer',
-          background:c.matched?'#4ECDC422':c.flipped?'#6C63FF22':'#1e2235',
-          border:`2px solid ${c.matched?'#4ECDC4':c.flipped?'#6C63FF':'#2a2f4a'}`,
-          transition:'all 0.2s'}},
-        c.flipped||c.matched?c.emoji:''))
+          borderRadius:12,cursor:c.matched?'default':'pointer',
+          background: c.matched ? c.bg+'66' : c.flipped ? c.bg : '#1e2235',
+          border:`3px solid ${c.matched?c.bg:c.flipped?c.bg:'#2a2f4a'}`,
+          transition:'all 0.2s',
+          boxShadow: c.flipped&&!c.matched ? `0 0 12px ${c.bg}88` : 'none'
+        }}))
     ),
     React.createElement('div',{style:{textAlign:'center',color:'#555',fontSize:12,marginTop:8}},`${roundScore}/${pairs} pairs found`)
   );
@@ -719,9 +730,13 @@ function ClockReading({ config, onComplete }) {
         const a=(i*90-90)*Math.PI/180;
         return React.createElement('text',{key:n,x:cx+42*Math.cos(a),y:cy+42*Math.sin(a)+4,textAnchor:'middle',fontSize:12,fill:'#aaa',fontFamily:'Arial'},n);
       }),
-      ...[...Array(12)].map((_,i)=>{
-        const a=(i*30-90)*Math.PI/180;
-        return React.createElement('line',{key:i,x1:cx+48*Math.cos(a),y1:cy+48*Math.sin(a),x2:cx+52*Math.cos(a),y2:cy+52*Math.sin(a),stroke:'#333',strokeWidth:1});
+      ...[...Array(60)].map((_,i)=>{
+        const a=(i*6-90)*Math.PI/180;
+        const isHour=i%5===0;
+        return React.createElement('line',{key:i,
+          x1:cx+(isHour?46:50)*Math.cos(a),y1:cy+(isHour?46:50)*Math.sin(a),
+          x2:cx+53*Math.cos(a),y2:cy+53*Math.sin(a),
+          stroke:isHour?'#666':'#2a2f4a',strokeWidth:isHour?2:1});
       }),
       React.createElement('line',{x1:cx,y1:cy,x2:hp.x,y2:hp.y,stroke:'#fff',strokeWidth:4,strokeLinecap:'round'}),
       React.createElement('line',{x1:cx,y1:cy,x2:mp.x,y2:mp.y,stroke:'#4ECDC4',strokeWidth:3,strokeLinecap:'round'}),
@@ -890,14 +905,14 @@ function SpatialRecall({ config, onComplete }) {
 // ── 7. NUMBER PATTERN ─────────────────────────────────────────
 function NumberPattern({ config, onComplete }) {
   const ROUND_SPECS = config.roundSpecs || [
-    { type:'add1',    label:'+1 sequences'          },
-    { type:'add2',    label:'+2 sequences'          },
-    { type:'add_var', label:'Add various numbers'   },
-    { type:'mult',    label:'Multiplication tables' },
-    { type:'sub',     label:'Decreasing sequences'  },
-    { type:'square',  label:'Square numbers'        },
-    { type:'fib',     label:'Fibonacci-style'       },
-    { type:'mixed',   label:'Mixed rules'           },
+    { type:'add1',    label:'Sequence 1 — what comes next?' },
+    { type:'add2',    label:'Sequence 2 — find the pattern'  },
+    { type:'add_var', label:'Sequence 3 — spot the rule'     },
+    { type:'mult',    label:'Sequence 4 — growing numbers'   },
+    { type:'sub',     label:'Sequence 5 — shrinking numbers' },
+    { type:'square',  label:'Sequence 6 — special pattern'   },
+    { type:'fib',     label:'Sequence 7 — classic sequence'  },
+    { type:'mixed',   label:'Sequence 8 — mixed challenge'   },
   ];
   const { currentRound, roundIdx, score, phase, completeRound, renderTransition, renderDone } = useProgression(ROUND_SPECS, onComplete);
 
@@ -969,9 +984,9 @@ function NumberPattern({ config, onComplete }) {
 function WordScramble({ config, onComplete }) {
   const ROUND_SPECS = config.roundSpecs || [
     { len:3, bank:'easy',   timePerQ:15, label:'3-letter words'         },
-    { len:4, bank:'easy',   timePerQ:14, label:'4-letter words'         },
-    { len:4, bank:'medium', timePerQ:13, label:'4-letter, harder'       },
-    { len:5, bank:'medium', timePerQ:12, label:'5-letter words'         },
+    { len:3, bank:'easy',   timePerQ:14, label:'3-letter words, faster'  },
+    { len:5, bank:'medium', timePerQ:13, label:'5-letter words'          },
+    { len:5, bank:'medium', timePerQ:12, label:'5-letter words, timed'   },
     { len:5, bank:'medium', timePerQ:10, label:'5-letter, timed'        },
     { len:6, bank:'hard',   timePerQ:12, label:'6-letter words'         },
     { len:6, bank:'hard',   timePerQ:10, label:'6-letter, faster'       },
@@ -1566,8 +1581,8 @@ function MissingLetter({ config, onComplete }) {
   const ALL_Q=[
     {display:"C _ T",answer:"A",opts:["A","O","I","U"],full:"CAT",hint:"A small furry pet"},
     {display:"D _ G",answer:"O",opts:["O","I","A","U"],full:"DOG",hint:"Man's best friend"},
-    {display:"S _ N",answer:"U",opts:["U","A","O","I"],full:"SUN",hint:"Shines in the sky"},
-    {display:"H _ T",answer:"A",opts:["A","O","I","U"],full:"HAT",hint:"Worn on the head"},
+    {display:"S _ T",answer:"I",opts:["I","A","O","U"],full:"SIT",hint:"What you do on a chair"},
+    {display:"H _ ND",answer:"A",opts:["A","O","I","E"],full:"HAND",hint:"Part of your arm"},
     {display:"BR _ IN",answer:"A",opts:["A","E","I","O"],full:"BRAIN",hint:"Think with this"},
     {display:"CL _ UD",answer:"O",opts:["O","A","E","U"],full:"CLOUD",hint:"Floats in the sky"},
     {display:"ST _ NE",answer:"O",opts:["O","A","I","U"],full:"STONE",hint:"Hard rock"},
@@ -1856,10 +1871,10 @@ function WhereAmI({ config, onComplete }) {
 
 function WhatSeason({ config, onComplete }) {
   const ALL_Q=[
-    {clue:"🌸 Flowers bloom. Birds return. Rain showers.",answer:"Spring",opts:["Spring","Summer","Autumn","Winter"]},
-    {clue:"☀️ Long days. Hot. School holidays. Beaches busy.",answer:"Summer",opts:["Spring","Summer","Autumn","Winter"]},
-    {clue:"🍂 Leaves turn golden. Harvest festivals. Cooling down.",answer:"Autumn",opts:["Spring","Summer","Autumn","Winter"]},
-    {clue:"❄️ Short days. Cold. Snow in some regions. Bare trees.",answer:"Winter",opts:["Spring","Summer","Autumn","Winter"]},
+    {clue:"Flowers start to bloom. Birds return from migration. April showers are common.",answer:"Spring",opts:["Spring","Summer","Autumn","Winter"]},
+    {clue:"Days are longest and hottest. School breaks for holidays. People visit beaches.",answer:"Summer",opts:["Spring","Summer","Autumn","Winter"]},
+    {clue:"Leaves on trees turn golden and fall. Farmers bring in their harvest. Temperatures drop.",answer:"Autumn",opts:["Spring","Summer","Autumn","Winter"]},
+    {clue:"Days are very short. Temperatures fall below zero in many places. Trees are bare.",answer:"Winter",opts:["Spring","Summer","Autumn","Winter"]},
     {clue:"People wear light jackets. It rained this morning but the sun came out by noon.",answer:"Spring",opts:["Spring","Summer","Autumn","Winter"]},
     {clue:"Children are outside until 9pm. Ice-cream vans are everywhere.",answer:"Summer",opts:["Spring","Summer","Autumn","Winter"]},
     {clue:"Pumpkins are displayed at shops. Bonfire Night approaches.",answer:"Autumn",opts:["Spring","Summer","Autumn","Winter"]},
@@ -1988,10 +2003,10 @@ function SudokuMini({ config, onComplete }) {
     {grid:[[1,0,3,0],[0,3,0,1],[3,0,1,0],[0,1,0,3]],sol:[[1,2,3,4],[4,3,2,1],[3,4,1,2],[2,1,4,3]]},
     {grid:[[0,2,0,4],[4,0,2,0],[0,4,0,2],[2,0,4,0]],sol:[[1,2,3,4],[4,3,2,1],[3,4,1,2],[2,1,4,3]]},
     {grid:[[2,0,4,0],[0,4,0,2],[4,0,2,0],[0,2,0,4]],sol:[[2,1,4,3],[3,4,1,2],[4,3,2,1],[1,2,3,4]]},
-    {grid:[[0,0,3,4],[3,4,0,0],[0,3,4,0],[4,0,0,3]],sol:[[1,2,3,4],[3,4,1,2],[2,3,4,1],[4,1,2,3]]},
+    {grid:[[1,0,0,4],[0,4,0,0],[0,0,4,0],[4,0,0,1]],sol:[[1,3,2,4],[2,4,1,3],[3,1,4,2],[4,2,3,1]]},
     {grid:[[4,0,0,2],[0,2,4,0],[2,0,0,4],[0,4,2,0]],sol:[[4,1,3,2],[3,2,4,1],[2,3,1,4],[1,4,2,3]]},
     {grid:[[0,1,0,0],[0,0,3,0],[0,2,0,0],[0,0,0,1]],sol:[[2,1,4,3],[4,3,2,1],[1,2,3,4],[3,4,1,2]]},
-    {grid:[[1,0,0,0],[0,0,2,0],[0,3,0,0],[0,0,0,4]],sol:[[1,2,3,4],[3,4,2,1],[2,3,4,1],[4,1,1,2]]},
+    {grid:[[0,2,0,0],[0,0,0,3],[1,0,0,0],[0,0,2,0]],sol:[[3,2,1,4],[4,1,2,3],[1,3,4,2],[2,4,3,1]]},
     {grid:[[0,0,0,1],[0,1,0,0],[0,0,4,0],[4,0,0,0]],sol:[[2,4,3,1],[3,1,2,4],[1,2,4,3],[4,3,1,2]]},
   ];
   const ROUND_SPECS=PUZZLES.map((_,i)=>({pIdx:i,label:`Puzzle ${i+1}`}));
@@ -2238,6 +2253,14 @@ function CategoryFluency({ config, onComplete }) {
     return()=>clearTimeout(t);
   },[phase2,timeLeft]);
 
+  const finishEarly=()=>{
+    if(phase2!=='play') return;
+    const correct=words.filter(w=>w.tapped&&cat.valid.includes(w.word)).length;
+    const wrong=words.filter(w=>w.tapped&&!cat.valid.includes(w.word)).length;
+    setPhase2('done');
+    completeRound(Math.max(0,correct-wrong),8);
+  };
+
   const tap=(i)=>{
     if(phase2!=='play') return;
     setWords(prev=>{
@@ -2260,7 +2283,10 @@ function CategoryFluency({ config, onComplete }) {
       React.createElement('div',{style:{fontSize:14,fontWeight:700,color:'#fff'}},cat.category),
       React.createElement('div',{style:{fontSize:20,fontWeight:800,color:timerColor}},`${timeLeft}s`)
     ),
-    phase2==='play'&&React.createElement('div',{style:{color:'#aaa',fontSize:12,marginBottom:10}},'Tap ONLY words in this category!'),
+    phase2==='play'&&React.createElement('div',{style:{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:10}},
+      React.createElement('div',{style:{color:'#aaa',fontSize:12}},'Tap ONLY words in this category!'),
+      React.createElement('button',{onClick:finishEarly,style:{padding:'5px 12px',background:'#4ECDC422',border:'1px solid #4ECDC4',borderRadius:8,color:'#4ECDC4',cursor:'pointer',fontSize:12,fontWeight:600}},'✓ Done')
+    ),
     React.createElement('div',{style:{display:'flex',flexWrap:'wrap',gap:8,justifyContent:'center'}},
       ...words.map((w,i)=>{
         let bg='#1e2235',border='#2a2f4a',color='#e0e0ff';
@@ -2499,13 +2525,13 @@ function TaskSwitch({ config, onComplete }) {
         {emoji:'🍦',isFood:true},{emoji:'🏠',isFood:false},{emoji:'🍓',isFood:true},{emoji:'⚽',isFood:false},
       ], yes:'Food', no:'Not Food' },
     { name:'Is it ALIVE?',   items:[
-        {emoji:'🐱',isAlive:true},{emoji:'🪨',isAlive:false},{emoji:'🌸',isAlive:true},
+        {emoji:'🐕',isAlive:true},{emoji:'🪨',isAlive:false},{emoji:'🌸',isAlive:true},
         {emoji:'🪑',isAlive:false},{emoji:'🐠',isAlive:true},{emoji:'💡',isAlive:false},
         {emoji:'🌳',isAlive:true},{emoji:'🔑',isAlive:false},{emoji:'🦋',isAlive:true},{emoji:'🎸',isAlive:false},
       ], yes:'Alive', no:'Not Alive' },
     { name:'Is it BIG?',     items:[
         {emoji:'🐘',isBig:true},{emoji:'🐜',isBig:false},{emoji:'🏔️',isBig:true},
-        {emoji:'🍀',isBig:false},{emoji:'🚢',isBig:true},{emoji:'🐞',isBig:false},
+        {emoji:'🍄',isBig:false},{emoji:'🚢',isBig:true},{emoji:'🐝',isBig:false},
         {emoji:'🌏',isBig:true},{emoji:'🐛',isBig:false},{emoji:'🏢',isBig:true},{emoji:'🐁',isBig:false},
       ], yes:'Big', no:'Small' },
   ];
@@ -3015,7 +3041,7 @@ function MentalRotation({ config, onComplete }) {
   if (q.type==='2d') {
     return React.createElement('div',{style:{textAlign:'center'}},
       React.createElement(RoundHeader,{roundIdx,totalRounds:ROUND_SPECS.length,label:currentRound.label,score,color:'#0096A0'}),
-      React.createElement('div',{style:{color:'#888',fontSize:12,marginBottom:8}},'Which rotation matches the original?'),
+      React.createElement('div',{style:{color:'#888',fontSize:12,marginBottom:8}},'The shape on the left has been rotated. Which option below shows the same rotation?'),
       React.createElement('div',{style:{display:'flex',alignItems:'center',gap:16,justifyContent:'center',marginBottom:16}},
         React.createElement('div',{dangerouslySetInnerHTML:{__html:q.shape.svg(q.baseAngle,'#6C63FF')}}),
         React.createElement('span',{style:{color:'#555',fontSize:20,fontWeight:700}},'→'),
@@ -3037,7 +3063,7 @@ function MentalRotation({ config, onComplete }) {
   // emoji type
   return React.createElement('div',{style:{textAlign:'center'}},
     React.createElement(RoundHeader,{roundIdx,totalRounds:ROUND_SPECS.length,label:currentRound.label,score,color:'#0096A0'}),
-    React.createElement('div',{style:{color:'#888',fontSize:12,marginBottom:12}},'Which emoji matches the original?'),
+    React.createElement('div',{style:{color:'#888',fontSize:12,marginBottom:12}},'Look at the emoji above — tap the exact same one from the choices below.'),
     React.createElement('div',{style:{fontSize:config.large?64:54,marginBottom:16,padding:'16px',background:'#1e2235',
       border:'2px solid #2a2f4a',borderRadius:16,display:'inline-block'}},q.target),
     React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,maxWidth:300,margin:'0 auto'}},
@@ -3102,7 +3128,7 @@ function MapNavigator({ config, onComplete }) {
   const [qi,  setQi]  =useState(0);
   const [picked,setPicked]=useState(null);
   const [correct,setCorrect]=useState(0);
-  const [showMap,setShowMap]=useState(false);
+  const [showMap,setShowMap]=useState(true);
 
   useEffect(()=>{
     setQuestions(Array.from({length:3},()=>makeQ(currentRound)));
@@ -3136,10 +3162,7 @@ function MapNavigator({ config, onComplete }) {
       ),
       React.createElement('div',{style:{color:'#FFB347',fontWeight:600,fontSize:13,marginTop:6}},'Where do you end up?')
     ),
-    !showMap&&React.createElement('button',{onClick:()=>setShowMap(true),
-      style:{background:'none',border:'1px solid #333',borderRadius:8,color:'#555',cursor:'pointer',fontSize:12,
-        padding:'4px 12px',marginBottom:10,display:'block',margin:'0 auto 10px'}},
-      '🗺️ Show grid'),
+
     showMap&&React.createElement('div',{style:{display:'inline-grid',
       gridTemplateColumns:`repeat(${q.grid},1fr)`,gap:2,background:'#2a2f4a',
       padding:2,borderRadius:8,marginBottom:10,maxWidth:'100%'}},
@@ -3269,15 +3292,15 @@ function EmotionMatch({ config, onComplete }) {
 // ── READ THE ROOM ──────────────────────────────────────────────────────
 function ReadTheRoom({ config, onComplete }) {
   const ALL_SCENARIOS = [
-    // Level 1 — simple
-    { scenario:"Tom just got a puppy for his birthday. He's jumping around the room.",
-      question:"How does Tom feel?", answer:"Happy", opts:["Happy","Sad","Angry","Bored"] },
-    { scenario:"Maria worked hard on her drawing. Her classmate said it looked terrible.",
-      question:"How does Maria probably feel?", answer:"Upset", opts:["Proud","Upset","Excited","Grateful"] },
-    { scenario:"Jake has been waiting for his friend for 2 hours. The friend hasn't arrived or called.",
-      question:"How does Jake likely feel?", answer:"Frustrated", opts:["Grateful","Relieved","Frustrated","Happy"] },
-    { scenario:"Priya stood up to give her speech in front of the whole school. Her heart was racing.",
-      question:"How does Priya most likely feel?", answer:"Nervous", opts:["Bored","Nervous","Angry","Content"] },
+    // Level 1 — child-friendly school/playground scenarios
+    { scenario:"Arjun scored the winning goal for his school team. His teammates cheered and lifted him up.",
+      question:"How does Arjun feel?", answer:"😄 Happy", opts:["😄 Happy","😢 Sad","😠 Angry","😐 Bored"] },
+    { scenario:"Meera spent all week making a painting. Her friend laughed at it in front of the class.",
+      question:"How does Meera probably feel?", answer:"😢 Upset", opts:["😄 Proud","😢 Upset","😃 Excited","🙏 Grateful"] },
+    { scenario:"Rohan saved his pocket money for two months to buy a toy. When he arrived at the shop, it was sold out.",
+      question:"How does Rohan most likely feel?", answer:"😞 Disappointed", opts:["😞 Disappointed","😄 Happy","😌 Relieved","😲 Surprised"] },
+    { scenario:"Priya had to read aloud in class. She stumbled over some words and the class went quiet.",
+      question:"How does Priya most likely feel?", answer:"😳 Embarrassed", opts:["😐 Bored","😳 Embarrassed","😠 Angry","😄 Proud"] },
     // Level 2 — moderate
     { scenario:"Leo just found out he didn't get the job he really wanted. He thought the interview went well.",
       question:"How does Leo most likely feel?", answer:"Disappointed", opts:["Disappointed","Relieved","Proud","Amused"] },
@@ -3364,15 +3387,15 @@ function EyesSay({ config, onComplete }) {
 
   return React.createElement('div',{style:{textAlign:'center'}},
     React.createElement(RoundHeader,{roundIdx,totalRounds:8,label:currentRound.label,score,color:'#C2185B'}),
-    React.createElement('div',{style:{color:'#888',fontSize:12,marginBottom:14}},'What emotion do these eyes show?'),
+    React.createElement('div',{style:{color:'#888',fontSize:12,marginBottom:14}},'Look only at the eyes. What emotion do they show? Use the hint if you need help.'),
     // Show only the eyes of the emoji (crop illusion with overflow hidden)
     React.createElement('div',{style:{
-      width:120,height:70,overflow:'hidden',margin:'0 auto 16px',
-      borderRadius:'50% 50% 0 0',background:'#1e2235',
+      width:130,height:72,overflow:'hidden',margin:'0 auto 16px',
+      borderRadius:12,background:'#1a1a2e',
       border:'2px solid #2a2f4a',display:'flex',alignItems:'flex-start',
-      justifyContent:'center',paddingTop:8
+      justifyContent:'center',paddingTop:4
     }},
-      React.createElement('div',{style:{fontSize:config.large?90:80,lineHeight:1,marginTop:-8}},q.eyes)
+      React.createElement('div',{style:{fontSize:config.large?100:88,lineHeight:1,marginTop:-14}},q.eyes)
     ),
     React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,maxWidth:320,margin:'0 auto 10px'}},
       ...opts[currentRound.qIdx].map((opt,i)=>{
