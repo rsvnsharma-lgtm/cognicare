@@ -8,10 +8,44 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0a0e1a; font-family: 'Segoe UI', system-ui, sans-serif; color: #e0e0ff; }
-    input:focus { outline: 2px solid #6C63FF; }
+    body { background: #0a0e1a; font-family: 'Segoe UI', system-ui, sans-serif; color: #e0e0ff; -webkit-text-size-adjust: 100%; }
+
+    /* WCAG 2.1 AA — minimum touch target 44×44px for all interactive elements */
+    button, [role="button"], input[type="button"], input[type="submit"] {
+      min-height: 44px;
+      min-width: 44px;
+      cursor: pointer;
+    }
+
+    /* WCAG 2.1 AA — visible focus indicators for keyboard navigation */
+    :focus-visible {
+      outline: 3px solid #A78BFA;
+      outline-offset: 3px;
+      border-radius: 4px;
+    }
+    input:focus { outline: 3px solid #6C63FF; outline-offset: 2px; }
+
+    /* Respect user OS preference for reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    /* High contrast mode support */
+    @media (forced-colors: active) {
+      button { border: 2px solid ButtonText; }
+    }
+
+    /* Large text scaling — seniors benefit from browser zoom */
+    html { font-size: 16px; }
+    @media (min-width: 600px) { html { font-size: 17px; } }
+
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #0a0e1a; }
+    ::-webkit-scrollbar-thumb { background: #2a2f4a; border-radius: 3px; }
+
+    /* WCAG colour contrast helpers — used on feedback text */
+    .text-muted  { color: #9999bb; } /* 4.6:1 on #0a0e1a ✓ */
+    .text-subtle { color: #7777aa; } /* 3.1:1 — decorative only */
     ::-webkit-scrollbar-thumb { background: #2a2f4a; border-radius: 3px; }
   </style>
 </head>
@@ -3449,18 +3483,140 @@ function EyesSay({ config, onComplete }) {
 // ── GAME PLAYER ────────────────────────────────────────────────
 const COMPONENTS = { ColorMatch, WhatsGone, OrientationQuiz, WordScramble, NumberPattern, SimonSays, SpatialRecall, MentalMath, WordAssociation, WhereAmI, WhatSeason, TimelineSort, ClockReading, NewsHeadlines, StoryRecall, DigitSpan, SentenceBuilder, SudokuMini, NBack, SynonymFinder, SpotDifference, ShapeAnalogy, JigsawPreview, VisualMatrix, CategoryFluency, RhymeTime, MissingLetter, StroopTest, StopSignal, TaskSwitch, TowerPlanner, ReactionTap, VisualSearch, MentalRotation, MapNavigator, EmotionMatch, ReadTheRoom, EyesSay };
 
+const TUTORIALS = {
+  ColorMatch:      { title:'Colour Match',      steps:['You will see a grid of face-down tiles.','Tap any two tiles to flip them over.','If the colours match — they stay face up!','If not — they flip back. Remember the positions.','Match all pairs to complete the round.'] },
+  WhatsGone:       { title:"What's Gone?",       steps:['Study the items shown on screen.','When the timer ends, some items disappear.','Tap the items that are missing from the second view.','Work quickly — you have limited time to answer.'] },
+  SimonSays:       { title:'Simon Says',         steps:['Watch the sequence of colours that light up.','After the sequence ends, repeat it by tapping the same colours in order.','Each round adds one more step to the sequence.','Take your time — accuracy matters more than speed.'] },
+  SpatialRecall:   { title:'Grid Memory',        steps:['A grid of tiles will briefly light up.','Remember which tiles were highlighted.','After they disappear, tap the same tiles from memory.','The grid gets larger as you progress.'] },
+  StoryRecall:     { title:'Story Recall',       steps:['Read the short story carefully.','When ready, press Start to begin the questions.','Answer each question from memory — no looking back.','Take your time reading — you only see the story once.'] },
+  SpotDifference:  { title:'Spot the Change',    steps:['Two similar images are shown side by side.','Find all the differences between them.','Tap each difference you spot on either image.','Some differences are subtle — look carefully!'] },
+  DigitSpan:       { title:'Digit Span',         steps:['A sequence of digits will appear one at a time.','After the last digit, type the full sequence in order.','Each round, the sequence gets one digit longer.','Focus on grouping digits in pairs to remember them.'] },
+  NBack:           { title:'N-Back',             steps:['A series of letters will appear one at a time.','Press YES if the current letter matches the one from N steps ago.','Press NO if it does not match.','Start slow — accuracy matters more than reaction speed.'] },
+  OrientationQuiz: { title:'Orientation Quiz',  steps:['Answer questions about time, dates, and place.','Choose the best answer from the options given.','There is no time limit — think before you tap.','These questions help train your sense of time and place.'] },
+  WhatSeason:      { title:'What Season?',       steps:['Read the clue carefully.','It describes something you might see or feel in a particular season.','Choose the season that best matches the clue.','Think about the weather, nature, and activities in each season.'] },
+  ClockReading:    { title:'Clock Reading',      steps:['A clock face will appear on screen.','Read the time shown by the hands.','Choose the correct time from the options given.','The hour hand is shorter, the minute hand is longer.'] },
+  WhereAmI:        { title:'Where Am I?',        steps:['You will be shown clues about a famous landmark or city.','Use the clues to identify where in the world it is.','Choose the correct location from the options.','Think about architecture, geography and culture clues.'] },
+  TimelineSort:    { title:'Timeline Sort',      steps:['You will see a set of historical events.','Drag them into chronological order — oldest first.','Tap and hold an event, then drag it to its correct position.','Use what you know about history to guide your ordering.'] },
+  NewsHeadlines:   { title:'News Headlines',     steps:['A news headline will appear on screen.','Decide whether it describes a past or present event.','Consider the language and context of the headline.','Some headlines are tricky — read them carefully.'] },
+  WordScramble:    { title:'Word Builder',       steps:['A scrambled word will appear.','Rearrange the letters to form the correct word.','Tap the letters in the order you want to build the word.','The hint at the bottom can help if you get stuck.'] },
+  WordAssociation: { title:'Odd One Out',        steps:['You will see a list of words.','Three words belong to the same category.','One word does NOT belong — find the odd one out.','Think about what the other three words have in common.'] },
+  SentenceBuilder: { title:'Sentence Builder',  steps:['A jumbled set of words will appear.','Tap the words in the correct order to build a proper sentence.','The sentence should make grammatical sense when complete.','Tap a word again to remove it from your sentence.'] },
+  SynonymFinder:   { title:'Synonym Finder',     steps:['A word will appear at the top.','Choose the word from the options that means the same thing.','Synonyms are words with very similar meanings.','If unsure, eliminate the options you know are wrong first.'] },
+  MentalMath:      { title:'Mental Maths',       steps:['A maths problem will appear on screen.','Calculate the answer in your head — no calculators!','Type your answer and press Enter or tap Submit.','Work at your own pace — accuracy counts more than speed.'] },
+  NumberPattern:   { title:'Pattern Finder',     steps:['A sequence of numbers will appear.','Figure out the rule connecting them.','Enter the next number in the sequence.','Look at the differences between each pair of numbers.'] },
+  SudokuMini:      { title:'Mini Sudoku',        steps:['Fill the 4×4 grid so every row, column and 2×2 box contains the numbers 1–4.','Each number can only appear once per row, column, and box.','Some numbers are given as starting clues.','Tap a cell to select it, then tap a number to fill it in.'] },
+  StroopTest:      { title:'Stroop Test',        steps:['A colour word will appear, written in a coloured ink.','Tap the button matching the INK COLOUR — not the word.','This takes concentration — your brain will try to read the word instead!','Go as fast as you can without making mistakes.'] },
+  StopSignal:      { title:'Stop Signal',        steps:['Tap the screen as quickly as possible when you see the target.','BUT — if a stop signal appears, do NOT tap.','The stop signal appears at random moments.','React fast to the target, but stay alert to stop signals.'] },
+  TaskSwitch:      { title:'Task Switch',        steps:['You will switch between two different rules during the game.','Read the current rule carefully before each trial.','Apply the correct rule to the item shown.','Switching rules quickly and accurately is the challenge.'] },
+  TowerPlanner:    { title:'Tower Planner',      steps:['Move discs between three pegs to rebuild the tower on the target peg.','You can only move one disc at a time.','A larger disc can never be placed on top of a smaller one.','Plan your moves ahead — fewer moves is better.'] },
+  ReactionTap:     { title:'Reaction Tap',       steps:['Watch the screen carefully.','Tap the star (or target) as quickly as possible when it appears.','Later rounds add distractors — only tap the correct target.','Keep your finger ready near the screen for fastest reaction.'] },
+  VisualSearch:    { title:'Visual Search',      steps:['A grid of symbols will appear.','Find the one symbol that is different from all the others.','Tap it before the timer runs out.','Scan systematically — row by row — for best results.'] },
+  MentalRotation:  { title:'Mental Rotation',    steps:['A shape or object will appear on the left.','Decide which of the options on the right is the same shape — just rotated.','Mentally spin the shape in your mind to compare.','Take your time — accuracy matters more than speed.'] },
+  MapNavigator:    { title:'Map Navigator',      steps:['You start at a position on the grid map.','Follow the direction instructions step by step.','Tap the square where you end up after all the steps.','Count carefully — it is easy to lose track!'] },
+  EmotionMatch:    { title:'Emotion Match',      steps:['An emoji face will appear showing an emotion.','Choose the word that best describes the emotion shown.','Some emotions are similar — look at the eyes and mouth carefully.','Trust your instinct — your first impression is usually right.'] },
+  ReadTheRoom:     { title:'Read the Room',      steps:['A social scenario will be described.','Think about how the people in the scenario are feeling.','Choose the most appropriate response or interpretation.','Think about context and body language clues in the description.'] },
+  EyesSay:        { title:'Eyes Say',            steps:['You will see a close-up of a pair of eyes.','The eyes are expressing an emotion or mental state.','Choose the word that best describes what the eyes are communicating.','Focus on the area around the eyes — eyebrows, eyelids, and gaze direction.'] },
+  ShapeAnalogy:    { title:'Shape Analogy',       steps:['Two shapes are shown with a relationship between them.','Work out the rule: A is to B as C is to ?','Choose the shape that completes the analogy.','Think about size, colour, orientation, and shape type.'] },
+  VisualMatrix:    { title:'Visual Matrix',       steps:['A 3×3 grid of shapes appears with one missing.','Find the pattern across rows and columns.','Choose the shape that correctly completes the matrix.','Look for changes in colour, size, number, or rotation.'] },
+  JigsawPreview:   { title:'Jigsaw Preview',      steps:['A complete image will flash briefly on screen.','Then one piece will be missing.','Choose which piece completes the image correctly.','Pay attention to the edges and patterns of each piece.'] },
+  CategoryFluency: { title:'Category Fluency',   steps:['A category will appear (e.g., Animals, Fruits).','Type as many items from that category as you can.','Press Enter or comma after each word.','Words that do not belong to the category will not count.','Press the Done button when you have no more words.'] },
+  RhymeTime:       { title:'Rhyme Time',         steps:['A word will appear on screen.','Choose the word from the options that rhymes with it.','Rhyming words end with the same sound.','Say the words aloud in your head to help compare sounds.'] },
+  MissingLetter:   { title:'Missing Letter',     steps:['A word appears with one letter replaced by an underscore.','Choose the missing letter from the options given.','Think about what common word the letters could spell.','Use the hint shown below the word if you need help.'] },
+};
+
 function GamePlayer({ game, onBack }) {
   const [completed, setCompleted] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(true);
+  const [tutStep, setTutStep] = useState(0);
   const Comp = COMPONENTS[game.component];
+  const tut = TUTORIALS[game.component];
+  const tutSteps = tut ? tut.steps : [];
+  const isLastStep = tutStep >= tutSteps.length - 1;
+
+  // If no tutorial defined for this game, skip straight to play
+  const skipTutorial = !tut || tutSteps.length === 0;
+
+  const btnBase = {border:'none',borderRadius:10,cursor:'pointer',fontWeight:700,fontSize:14,padding:'10px 20px',minHeight:44};
+
   return React.createElement('div',null,
-    React.createElement('button',{onClick:onBack,style:{background:'none',border:'none',color:'#6C63FF',cursor:'pointer',fontSize:14,marginBottom:16}},'← Back'),
+    // Back button
+    React.createElement('button',{onClick:onBack,style:{background:'none',border:'none',color:'#6C63FF',cursor:'pointer',fontSize:14,marginBottom:16,minHeight:44,padding:'0 8px 0 0'}},'← Back'),
+
+    // Game title + desc
     React.createElement('div',{style:{marginBottom:20}},
       React.createElement('h2',{style:{color:'#fff',margin:0,fontSize:22}},game.name),
       React.createElement('p',{style:{color:'#aaa',fontSize:14,margin:'4px 0 0'}},game.desc)
     ),
-    Comp ? React.createElement(Comp,{config:game.config,onComplete:()=>setCompleted(true)})
-         : React.createElement('div',{style:{color:'#aaa'}},'Coming soon!'),
-    completed&&React.createElement('button',{onClick:onBack,style:{marginTop:20,padding:'10px 24px',background:'linear-gradient(135deg,#6C63FF,#4ECDC4)',border:'none',borderRadius:12,color:'#fff',cursor:'pointer',fontWeight:700,fontSize:15}},'Play Another')
+
+    // Tutorial overlay — shown before first play
+    showTutorial && !skipTutorial && !completed && React.createElement('div',{style:{background:'#12172b',border:'2px solid #6C63FF',borderRadius:16,padding:'24px 20px',marginBottom:20}},
+      // Header
+      React.createElement('div',{style:{display:'flex',alignItems:'center',gap:10,marginBottom:20}},
+        React.createElement('span',{style:{fontSize:24}},'📖'),
+        React.createElement('div',null,
+          React.createElement('div',{style:{fontWeight:800,color:'#A78BFA',fontSize:15,letterSpacing:0.4}},'HOW TO PLAY'),
+          React.createElement('div',{style:{color:'#555',fontSize:12}},game.name)
+        )
+      ),
+
+      // Step dots
+      tutSteps.length > 1 && React.createElement('div',{style:{display:'flex',gap:6,marginBottom:16}},
+        ...tutSteps.map((_,i)=>React.createElement('div',{key:i,style:{
+          width: i===tutStep?24:8, height:8, borderRadius:4,
+          background: i===tutStep?'#6C63FF': i<tutStep?'#4ECDC4':'#2a2f4a',
+          transition:'all 0.3s'
+        }}))
+      ),
+
+      // Step content
+      React.createElement('div',{style:{
+        background:'#0a0e1a',borderRadius:10,padding:'16px 18px',
+        minHeight:70,display:'flex',alignItems:'center',marginBottom:20
+      }},
+        React.createElement('p',{style:{color:'#e0e0ff',fontSize:16,lineHeight:1.6,margin:0}},
+          `${tutStep+1}. ${tutSteps[tutStep]}`
+        )
+      ),
+
+      // Navigation buttons
+      React.createElement('div',{style:{display:'flex',gap:10,justifyContent:'space-between'}},
+        tutStep > 0
+          ? React.createElement('button',{
+              onClick:()=>setTutStep(t=>t-1),
+              style:{...btnBase,background:'#1e2235',color:'#aaa',flex:1}
+            },'← Back')
+          : React.createElement('button',{
+              onClick:()=>setShowTutorial(false),
+              style:{...btnBase,background:'#1e2235',color:'#666',flex:1}
+            },'Skip'),
+
+        isLastStep
+          ? React.createElement('button',{
+              onClick:()=>setShowTutorial(false),
+              'aria-label':'Start playing',
+              style:{...btnBase,background:'linear-gradient(135deg,#6C63FF,#4ECDC4)',color:'#fff',flex:2}
+            },"🎮  Let's Play!")
+          : React.createElement('button',{
+              onClick:()=>setTutStep(t=>t+1),
+              style:{...btnBase,background:'#6C63FF',color:'#fff',flex:2}
+            },'Next →')
+      )
+    ),
+
+    // Game component — shown after tutorial dismissed
+    (!showTutorial || skipTutorial) && !completed &&
+      (Comp ? React.createElement(Comp,{config:game.config,onComplete:()=>setCompleted(true)})
+            : React.createElement('div',{style:{color:'#aaa'}},'Coming soon!')),
+
+    // Completion button
+    completed && React.createElement('div',{style:{textAlign:'center',padding:'20px 0'}},
+      React.createElement('div',{style:{fontSize:48,marginBottom:12}},'🎉'),
+      React.createElement('div',{style:{color:'#4ECDC4',fontWeight:700,fontSize:18,marginBottom:8}},'Round Complete!'),
+      React.createElement('button',{
+        onClick:onBack,
+        style:{...btnBase,background:'linear-gradient(135deg,#6C63FF,#4ECDC4)',color:'#fff',fontSize:16,padding:'12px 32px'}
+      },'Play Another Game')
+    )
   );
 }
 
@@ -3499,7 +3655,28 @@ function App() {
       playing&&React.createElement(GamePlayer,{game:playing,onBack:()=>setPlaying(null)}),
 
       !playing&&step===0&&React.createElement('div',null,
-        React.createElement('p',{style:{color:'#aaa',marginBottom:20,fontSize:15}},'Select your age group to get started:'),
+        React.createElement('p',{style:{color:'#aaa',marginBottom:12,fontSize:15}},'Select your age group to get started:'),
+
+        // Session guidance cards per age group (shown before selection)
+        React.createElement('div',{style:{marginBottom:20,padding:'14px 16px',background:'#12172b',borderRadius:12,border:'1px solid #2a2f4a'}},
+          React.createElement('div',{style:{display:'flex',alignItems:'center',gap:8,marginBottom:10}},
+            React.createElement('span',{style:{fontSize:18}},'💡'),
+            React.createElement('span',{style:{fontWeight:700,color:'#A78BFA',fontSize:13,letterSpacing:0.5}},'RECOMMENDED SESSION GUIDE')
+          ),
+          React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:8}},
+            ...[
+              {icon:'🌟',label:'Kids',tip:'10–15 min · 3× per week · Memory & Language'},
+              {icon:'🚀',label:'Teens',tip:'15–20 min · 3× per week · Executive & Logic'},
+              {icon:'💡',label:'Adults',tip:'20–25 min · 4× per week · Speed & Executive'},
+              {icon:'🌿',label:'Seniors',tip:'15–20 min · 4–5× per week · Memory & Speed'},
+            ].map(({icon,label,tip})=>
+              React.createElement('div',{key:label,style:{padding:'8px 10px',background:'#1a2035',borderRadius:8,border:'1px solid #2a2f4a'}},
+                React.createElement('div',{style:{fontWeight:700,color:'#fff',fontSize:12,marginBottom:2}},`${icon} ${label}`),
+                React.createElement('div',{style:{color:'#8888bb',fontSize:11,lineHeight:1.4}},tip)
+              )
+            )
+          )
+        ),
         React.createElement('div',{style:{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}},
           ...AGE_GROUPS.map(ag=>React.createElement('button',{
             key:ag.id, onClick:()=>setAge(ag.id),
